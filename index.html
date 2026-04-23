@@ -1,0 +1,1885 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>G Boutique Hotel Kefalonia</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#E2B26E;
+      --brand-dark:#D8973B;
+      --brand-strong:#BA7D25;
+      --brand-light:#ECCDA1;
+
+      --bg-main: linear-gradient(180deg, var(--brand-light) 0%, var(--brand) 55%, var(--brand-dark) 100%);
+      --glass: rgba(255,255,255,.20);
+      --glass2: rgba(255,255,255,.28);
+      --border: rgba(255,255,255,.55);
+
+      --text:#fff;
+      --text-soft: rgba(255,255,255,.82);
+
+      --shadow: 0 14px 34px rgba(0,0,0,.22);
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; margin:0; }
+    body{
+      font-family: Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:#000;
+      overflow:hidden;
+      color: var(--text);
+    }
+
+    button{ color:#fff; }
+
+    .app{
+      height:100%;
+      width:100%;
+      background: var(--bg-main);
+      position: relative;
+      overflow:hidden;
+    }
+
+    .blobs{ position:absolute; inset:-20%; filter: blur(52px); opacity:.55; pointer-events:none; }
+    .blob{
+      position:absolute;
+      width:46vw; height:46vw;
+      max-width:520px; max-height:520px;
+      border-radius:999px;
+      background: rgba(255,255,255,.28);
+      animation: float 12s ease-in-out infinite;
+    }
+    .b1{ top:10%; left:-12%; }
+    .b2{ top:44%; right:-12%; animation-delay:-4s; opacity:.45; width:56vw; height:56vw; }
+    .b3{ bottom:-14%; left:18%; animation-delay:-7s; opacity:.35; width:60vw; height:60vw; }
+    @keyframes float{
+      0%,100%{ transform: translate3d(0,0,0) scale(1); }
+      50%{ transform: translate3d(20px,-25px,0) scale(1.05); }
+    }
+
+    .screen{ position:absolute; inset:0; display:none; }
+    .screen.active{ display:flex; }
+
+    .splash{
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(1200px 700px at 20% 20%, rgba(255,255,255,.18), transparent 55%), linear-gradient(135deg, rgba(255,255,255,.08), rgba(0,0,0,.06));
+      padding: 24px;
+      text-align:center;
+    }
+    .splashBox{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+    .title{
+      margin:0;
+      font-weight:300;
+      letter-spacing:.6px;
+      line-height:1.05;
+      font-size: clamp(30px, 7vw, 44px);
+      text-shadow: 0 10px 22px rgba(0,0,0,.35);
+    }
+    .welcomeBtn{
+      padding:14px 30px;
+      border-radius:22px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.22);
+      color: var(--text);
+      font-size:26px;
+      font-weight:300;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform .12s ease;
+    }
+    .welcomeBtn:active{ transform: scale(.98); }
+    .hint{ font-size:14px; color: var(--text-soft); }
+
+    .home{ flex-direction:column; align-items:center; overflow:hidden; }
+    .menuHeader{ width:100%; padding: 22px 18px 10px; text-align:center; z-index: 2; }
+    .menuTitle{ font-size:22px; font-weight:800; letter-spacing:.3px; text-shadow: 0 10px 22px rgba(0,0,0,.18); }
+
+    .menuList{
+      width:100%;
+      max-width: 420px;
+      padding: 10px 18px 24px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:18px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      z-index: 2;
+    }
+
+    .menuItem{
+      width:260px;
+      padding:18px 16px;
+      border-radius:26px;
+      background: var(--glass2);
+      border:1px solid rgba(255,255,255,.55);
+      box-shadow: var(--shadow);
+      text-align:center;
+      cursor:pointer;
+      user-select:none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform .12s ease, background .18s ease;
+    }
+    .menuItem:active{ transform: scale(.99); }
+    .menuItem b{ display:block; font-size:16px; font-weight:800; letter-spacing:.4px; }
+    .menuItem span{ display:block; margin-top:6px; font-size:13px; color: var(--text-soft); }
+
+
+
+    /* Logo button in main menu (same size as other menu buttons) */
+    .logoItem{ position: relative; }
+    .logoItem .ghost{ visibility:hidden; }
+    .logoItem .menuLogo{
+      position:absolute;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      max-width:72%;
+      max-height:72%;
+      object-fit:contain;
+      pointer-events:none;
+    }
+
+    .page{ flex-direction:column; padding: 18px; gap: 14px; z-index: 2; }
+    .topRow{ display:flex; align-items:center; gap: 12px; }
+    .backBtn{
+      width:44px; height:44px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.16);
+      color:#fff;
+      font-size:20px;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .pageTopTitle{
+      flex:1;
+      font-weight:800;
+      font-size:18px;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-shadow: 0 10px 22px rgba(0,0,0,.18);
+    }
+    .card{
+      background: rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.45);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* About layout */
+    .aboutWrap{ padding: 4px 2px 8px; }
+    .aboutHero{ text-align:center; padding: 6px 6px 14px; }
+    .aboutHero .kicker{ font-weight: 800; letter-spacing: .8px; font-size: 18px; margin-bottom: 8px; }
+    .aboutHero .name{ font-weight: 300; font-size: 28px; line-height: 1.1; margin: 0 0 8px; }
+    .aboutHero .desc{ font-size: 13px; color: var(--text-soft); line-height: 1.55; margin: 0 auto; max-width: 540px; }
+
+    .aboutGrid{ display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 10px; padding: 0 4px 6px; }
+    @media (min-width: 680px){ .aboutGrid{ grid-template-columns: 1fr 1fr; } .aboutHero .name{ font-size: 34px; } }
+    @media (min-width: 980px){ .aboutGrid{ grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
+    .aboutCard{
+      border-radius: 22px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.45);
+      background: rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      transform: translateY(12px);
+      opacity: 0;
+    }
+    .aboutCard.animate-in{ animation: riseFade .55s ease-out forwards; }
+    @keyframes riseFade{ to{ transform: translateY(0); opacity:1; } }
+
+    .aboutImg{ position:relative; height: 170px; background: rgba(255,255,255,.12); }
+    .aboutImg img{ width:100%; height:100%; object-fit:cover; display:block; }
+        .aboutImg.noimg{ display:flex; align-items:flex-end; justify-content:flex-start; }
+    .aboutImg.noimg::before{ content:'Image missing'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:700; opacity:.45; }
+.aboutImg .label{ position:absolute; left: 12px; bottom: 10px; font-weight: 800; font-size: 18px; text-shadow: 0 10px 18px rgba(0,0,0,.45); }
+    .aboutBody{ padding: 12px 12px 14px; background: rgba(0,0,0,.08); }
+    .aboutBody p{ margin:0; color: rgba(255,255,255,.88); line-height: 1.55; font-size: 13px; }
+  
+    /* Close-to-us compact tabs */
+    .pageTopTitle.wrapTitleTabs{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .titleTabs{display:flex;gap:8px;align-items:center}
+    .tabPill{border:0;cursor:pointer;padding:7px 14px;border-radius:999px;font-weight:800;
+      background:rgba(255,255,255,.28);color:#fff;font-size:12px;letter-spacing:.2px}
+    .tabPill.active{background:var(--brand-strong);color:#fff}
+    /* Todo checklist */
+    .todoList{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+    .todoRow{display:flex;gap:12px;align-items:flex-start;padding:12px 12px;border-radius:16px;
+      background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12)}
+    .todoRow input{margin-top:4px;transform:scale(1.25)}
+    .todoRow b{display:block;font-size:14px}
+    .todoRow p{margin:3px 0 0 0;color:rgba(255,255,255,.82);font-size:13px;line-height:1.45}
+    /* Mobile friendliness: keep all top tabs/buttons visible */
+    @media (max-width: 420px){
+  .page{ padding: 12px; gap: 10px; }
+  .topRow{ gap: 10px; align-items:flex-start; }
+  .backBtn{ width:40px; height:40px; border-radius:12px; }
+  .pageTopTitle{ font-size:16px; }
+  .pageTopTitle.wrapTitleTabs{ gap: 8px; }
+  .pageTopTitle.wrapTitleTabs > span:first-child{ width:100%; } /* title on its own line */
+  .titleTabs{
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space:nowrap;
+    padding-bottom: 4px;
+  }
+  .titleTabs::-webkit-scrollbar{ display:none; }
+  .tabPill{
+    padding: 6px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+}
+
+  
+/* Info titles around logo button */
+.menuInfoTitle{
+  width:260px;
+  text-align:center;
+  font-family: Manrope, system-ui, sans-serif;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.6px;
+  color: rgba(255,255,255,.9);
+  text-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+.topInfoTitle{
+  margin-top:10px;
+  margin-bottom:-6px;
+}
+.bottomInfoTitle{
+  margin-top:-6px;
+}
+
+
+/* Clickable photos */
+.clickablePhoto{ cursor:pointer; }
+
+
+.articleWrap h2{font-size:22px;margin-bottom:10px;}
+.articleWrap p{font-size:14px;line-height:1.6;margin-bottom:10px;}
+.articleIntro{margin-bottom:14px;}
+.articleRow{display:flex;gap:14px;margin-top:18px;align-items:center;}
+.articleRow.reverse{flex-direction:row-reverse;}
+.articleImg{width:45%;border-radius:16px;object-fit:cover;display:block;min-height:220px;background:rgba(255,255,255,.10);}
+.articleText{width:55%;}
+.articleText h3{margin:0 0 8px 0;font-size:16px;}
+.articleMeta{margin-top:8px;}
+@media(max-width:600px){
+  .articleRow,.articleRow.reverse{flex-direction:column;}
+  .articleImg,.articleText{width:100%;}
+}
+
+</style>
+</head>
+
+<body>
+  <div class="app" id="app">
+    <div class="blobs" aria-hidden="true">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+    </div>
+
+    <section class="screen splash active" id="splash">
+      <div class="splashBox">
+        <h1 class="title">G Boutique Hotel<br>Kefalonia</h1>
+        <button class="welcomeBtn" id="welcomeBtn" data-i18n="welcomeBtn">Welcome</button>
+        <div class="hint" data-i18n="welcomeHint">Press Welcome to begin</div>
+      </div>
+    </section>
+
+    <section class="screen home" id="home">
+      <div class="menuHeader">
+        <div class="menuTitle" data-i18n="menuTitle">Menu</div>
+      </div>
+<div class="menuList" aria-label="Main menu">
+        <div class="menuItem" data-go="about">
+          <b data-i18n="aboutBtn">ABOUT US</b>
+          <span data-i18n="aboutSubtitle">The residence</span>
+        </div>
+        <div class="menuItem" data-go="close">
+          <b data-i18n="closeBtn">CLOSE TO US</b>
+          <span data-i18n="closeSubtitle">Nearby places</span>
+        </div>
+        
+<div class="menuItem" data-go="argostoli">
+          <b data-i18n="argoBtn">ARGOSTOLI</b>
+          <span data-i18n="argoSubtitle">The city</span>
+        </div>
+        <div class="menuItem" data-go="kefalonia">
+          <b data-i18n="kefBtn">KEFALONIA</b>
+          <span data-i18n="kefSubtitle">The island</span>
+        </div>
+
+        <div class="menuItem" data-go="tours">
+          <b data-i18n="toursBtn">TOURS</b>
+          <span data-i18n="toursSubtitle">Experiences</span>
+        </div>
+</div>
+    </section>
+
+    <section class="screen page" id="page">
+      <div class="topRow">
+        <button class="backBtn" id="backBtn" aria-label="Back">←</button>
+        <div class="pageTopTitle" id="pageTopTitle">Page</div>
+      </div>
+      <div class="card" id="pageCard"></div>
+    </section>
+  </div>
+
+<script>
+const DEFAULT_PAGE = "welcome";
+
+const I18N = {
+  el: {
+    welcomeBtn: "Welcome",
+    welcomeHint: "Πατήστε Welcome για να ξεκινήσετε",
+    menuTitle: "Menu",
+    aboutBtn: "ABOUT US",
+    closeBtn: "CLOSE TO US",
+    lixBtn: "LIXOURI",
+    argoBtn: "ARGOSTOLI",
+    kefBtn: "KEFALONIA",
+    aboutSubtitle: "Το κατάλυμα",
+    closeSubtitle: "Τι υπάρχει κοντά",
+    lixSubtitle: "Η περιοχή",
+    argoSubtitle: "Η πόλη",
+    kefSubtitle: "Το νησί",
+    
+    toursBtn: "TOURS",
+    toursSubtitle: "Tours & εμπειρίες",pageMissingPhotos: "Βάλε φωτογραφίες στο folder assets/",
+    tabSightseens: "Αξιοθέατα",
+    tabRestaurants: "Εστιατόρια",
+    tabBeachesInLixouri: "Παραλίες στο Ληξούρι",
+    tabBeachesNearArgostoli: "Παραλίες κοντά στο Αργοστόλι",
+    tabBeaches: "Παραλίες",
+    tabOtherBeaches: "Άλλες παραλίες",
+    titleFamousBeaches: "Διάσημες Παραλίες",
+    titleSightseensKef: "Αξιοθέατα Κεφαλονιάς",
+    titleSightseensLix: "Αξιοθέατα Ληξουρίου",
+    titleSightseensArg: "Αξιοθέατα Αργοστολίου",
+    locationLbl: "Τοποθεσία",
+    servesLbl: "Σερβίρει",
+    servesLunchDinnerWine: "Μεσημεριανό, Βραδινό, Κρασιά",
+    servesLunchDinner: "Μεσημεριανό, Βραδινό",
+    servesAllDay: "Όλη μέρα",
+  },
+  en: {
+    welcomeBtn: "Welcome",
+    welcomeHint: "Press Welcome to begin",
+    menuTitle: "Menu",
+    aboutBtn: "ABOUT US",
+    closeBtn: "CLOSE TO US",
+    lixBtn: "LIXOURI",
+    argoBtn: "ARGOSTOLI",
+    kefBtn: "KEFALONIA",
+    aboutSubtitle: "The residence",
+    closeSubtitle: "Nearby places",
+    lixSubtitle: "The area",
+    argoSubtitle: "The city",
+    kefSubtitle: "The island",
+    
+    toursBtn: "TOURS",
+    toursSubtitle: "Experiences",pageMissingPhotos: "Add photos to the assets/ folder",
+    tabSightseens: "Sightseens",
+    tabRestaurants: "Restaurants",
+    tabBeachesInLixouri: "Beaches in Lixouri",
+    tabBeachesNearArgostoli: "Beaches near Argostoli",
+    tabBeaches: "Beaches",
+    tabOtherBeaches: "Other beaches",
+    titleFamousBeaches: "Famous Beaches",
+    titleSightseensKef: "Kefalonia Sightseens",
+    titleSightseensLix: "Lixouri Sightseeing",
+    titleSightseensArg: "Argostoli Sightseeing",
+    locationLbl: "Location",
+    servesLbl: "Serves",
+    servesLunchDinnerWine: "Lunch, Dinner, Wines",
+    servesLunchDinner: "Lunch, Dinner",
+    servesAllDay: "All day",
+  },
+  it: {
+    welcomeBtn: "Benvenuto",
+    welcomeHint: "Premi Benvenuto per iniziare",
+    menuTitle: "Menu",
+    aboutBtn: "CHI SIAMO",
+    closeBtn: "VICINO A NOI",
+    lixBtn: "LIXOURI",
+    argoBtn: "ARGOSTOLI",
+    kefBtn: "CEFALONIA",
+    aboutSubtitle: "La struttura",
+    closeSubtitle: "Nei dintorni",
+    lixSubtitle: "La zona",
+    argoSubtitle: "La città",
+    kefSubtitle: "L'isola",
+    
+    toursBtn: "TOURS",
+    toursSubtitle: "Esperienze",pageMissingPhotos: "Aggiungi foto nella cartella assets/",
+    tabSightseens: "Attrazioni",
+    tabRestaurants: "Ristoranti",
+    tabBeachesInLixouri: "Spiagge a Lixouri",
+    tabBeachesNearArgostoli: "Spiagge vicino ad Argostoli",
+    tabBeaches: "Spiagge",
+    tabOtherBeaches: "Altre spiagge",
+    titleFamousBeaches: "Spiagge famose",
+    titleSightseensKef: "Attrazioni di Cefalonia",
+    titleSightseensLix: "Attrazioni di Lixouri",
+    titleSightseensArg: "Attrazioni di Argostoli",
+    locationLbl: "Posizione",
+    servesLbl: "Servizio",
+    servesLunchDinnerWine: "Pranzo, Cena, Vini",
+    servesLunchDinner: "Pranzo, Cena",
+    servesAllDay: "Tutto il giorno",
+  },
+  fr: {
+    welcomeBtn: "Bienvenue",
+    welcomeHint: "Appuyez sur Bienvenue pour commencer",
+    menuTitle: "Menu",
+    aboutBtn: "À PROPOS",
+    closeBtn: "PRÈS DE NOUS",
+    lixBtn: "LIXOURI",
+    argoBtn: "ARGOSTOLI",
+    kefBtn: "CÉPHALONIE",
+    aboutSubtitle: "La résidence",
+    closeSubtitle: "À proximité",
+    lixSubtitle: "La région",
+    argoSubtitle: "La ville",
+    kefSubtitle: "L'île",
+    
+    toursBtn: "TOURS",
+    toursSubtitle: "Expériences",pageMissingPhotos: "Ajoutez des photos dans le dossier assets/",
+    tabSightseens: "Sites",
+    tabRestaurants: "Restaurants",
+    tabBeachesInLixouri: "Plages à Lixouri",
+    tabBeachesNearArgostoli: "Plages près d'Argostoli",
+    tabBeaches: "Plages",
+    tabOtherBeaches: "Autres plages",
+    titleFamousBeaches: "Plages célèbres",
+    titleSightseensKef: "Sites de Céphalonie",
+    titleSightseensLix: "Sites de Lixouri",
+    titleSightseensArg: "Sites d’Argostoli",
+    locationLbl: "Adresse",
+    servesLbl: "Service",
+    servesLunchDinnerWine: "Déjeuner, Dîner, Vins",
+    servesLunchDinner: "Déjeuner, Dîner",
+    servesAllDay: "Toute la journée",
+  },
+  es: {
+    welcomeBtn: "Bienvenido",
+    welcomeHint: "Pulsa Bienvenido para empezar",
+    menuTitle: "Menú",
+    aboutBtn: "SOBRE NOSOTROS",
+    closeBtn: "CERCA DE NOSOTROS",
+    lixBtn: "LIXOURI",
+    argoBtn: "ARGOSTOLI",
+    kefBtn: "CEFALONIA",
+    aboutSubtitle: "El alojamiento",
+    closeSubtitle: "Cerca de aquí",
+    lixSubtitle: "La zona",
+    argoSubtitle: "La ciudad",
+    kefSubtitle: "La isla",
+    
+    toursBtn: "TOURS",
+    toursSubtitle: "Experiencias",pageMissingPhotos: "Añade fotos en la carpeta assets/",
+    tabSightseens: "Lugares",
+    tabRestaurants: "Restaurantes",
+    tabBeachesInLixouri: "Playas en Lixouri",
+    tabBeachesNearArgostoli: "Playas cerca de Argostoli",
+    tabBeaches: "Playas",
+    tabOtherBeaches: "Otras playas",
+    titleFamousBeaches: "Playas famosas",
+    titleSightseensKef: "Lugares de Cefalonia",
+    titleSightseensLix: "Lugares de Lixouri",
+    titleSightseensArg: "Lugares de Argostoli",
+    locationLbl: "Ubicación",
+    servesLbl: "Sirve",
+    servesLunchDinnerWine: "Almuerzo, Cena, Vinos",
+    servesLunchDinner: "Almuerzo, Cena",
+    servesAllDay: "Todo el día",
+  }
+};
+
+const ABOUT_CARDS = [
+  {
+    title: { el:"Studio / Apartments", en:"Studio / Apartments", it:"Studio / Apartments", fr:"Studio / Apartments", es:"Studio / Apartments" },
+    text: {
+      el:"Every vacation begins with the search for the perfect place.\nThe accommodation that will fulfill the idea you have in mind for your holiday.\nThe hotel that gently combines comfort, peace and a touch of luxury.\nHotel shouldn't be just a place. It should be an experience.",
+      en:"Every vacation begins with the search for the perfect place.\nThe accommodation that will fulfill the idea you have in mind for your holiday.\nThe hotel that gently combines comfort, peace and a touch of luxury.\nHotel shouldn't be just a place. It should be an experience.",
+      it:"Every vacation begins with the search for the perfect place.\nThe accommodation that will fulfill the idea you have in mind for your holiday.\nThe hotel that gently combines comfort, peace and a touch of luxury.\nHotel shouldn't be just a place. It should be an experience.",
+      fr:"Every vacation begins with the search for the perfect place.\nThe accommodation that will fulfill the idea you have in mind for your holiday.\nThe hotel that gently combines comfort, peace and a touch of luxury.\nHotel shouldn't be just a place. It should be an experience.",
+      es:"Every vacation begins with the search for the perfect place.\nThe accommodation that will fulfill the idea you have in mind for your holiday.\nThe hotel that gently combines comfort, peace and a touch of luxury.\nHotel shouldn't be just a place. It should be an experience."
+    },
+    img:"assets/about_studio1.jpg"
+  },
+  {
+    title: { el:"Pool", en:"Pool", it:"Pool", fr:"Pool", es:"Pool" },
+    text: {
+      el:"Our pool is a serene oasis designed for ultimate relaxation and luxury. Set amidst lush surroundings and offering breathtaking views of the Ionian Sea, the infinity pool creates the perfect ambiance for unwinding.",
+      en:"Our pool is a serene oasis designed for ultimate relaxation and luxury. Set amidst lush surroundings and offering breathtaking views of the Ionian Sea, the infinity pool creates the perfect ambiance for unwinding.",
+      it:"Our pool is a serene oasis designed for ultimate relaxation and luxury. Set amidst lush surroundings and offering breathtaking views of the Ionian Sea, the infinity pool creates the perfect ambiance for unwinding.",
+      fr:"Our pool is a serene oasis designed for ultimate relaxation and luxury. Set amidst lush surroundings and offering breathtaking views of the Ionian Sea, the infinity pool creates the perfect ambiance for unwinding.",
+      es:"Our pool is a serene oasis designed for ultimate relaxation and luxury. Set amidst lush surroundings and offering breathtaking views of the Ionian Sea, the infinity pool creates the perfect ambiance for unwinding."
+    },
+    img:"assets/about_studio2.jpg"
+  },
+    {
+    title: { el:"Hammam & Spa", en:"Hammam & Spa", it:"Hammam & Spa", fr:"Hammam & Spa", es:"Hammam & Spa" },
+    text: {
+      el:"The hammam and spa offer a sanctuary of relaxation and rejuvenation. Inspired by traditional Turkish bathhouses, the hammam provides a soothing, steam-filled environment where guests can unwind and cleanse both body and mind..",
+      en:"The hammam and spa offer a sanctuary of relaxation and rejuvenation. Inspired by traditional Turkish bathhouses, the hammam provides a soothing, steam-filled environment where guests can unwind and cleanse both body and mind..",
+      it:"The hammam and spa offer a sanctuary of relaxation and rejuvenation. Inspired by traditional Turkish bathhouses, the hammam provides a soothing, steam-filled environment where guests can unwind and cleanse both body and mind..",
+      fr:"The hammam and spa offer a sanctuary of relaxation and rejuvenation. Inspired by traditional Turkish bathhouses, the hammam provides a soothing, steam-filled environment where guests can unwind and cleanse both body and mind..",
+      es:"The hammam and spa offer a sanctuary of relaxation and rejuvenation. Inspired by traditional Turkish bathhouses, the hammam provides a soothing, steam-filled environment where guests can unwind and cleanse both body and mind.."
+    },
+    img:"assets/about_spa.jpg"
+  },
+  {
+    title: { el:"Gym", en:"Gym", it:"Gym", fr:"Gym", es:"Gym" },
+    text: {
+      el:"G Boutique Hotel's gym is a state-of-the-art fitness facility, designed to cater to guests who want to maintain their workout routine while enjoying a luxurious stay. Equipped with modern machines, including rowing machine, and free weights,",
+      en:"G Boutique Hotel's gym is a state-of-the-art fitness facility, designed to cater to guests who want to maintain their workout routine while enjoying a luxurious stay. Equipped with modern machines, including rowing machine, and free weights,",
+      it:"G Boutique Hotel's gym is a state-of-the-art fitness facility, designed to cater to guests who want to maintain their workout routine while enjoying a luxurious stay. Equipped with modern machines, including rowing machine, and free weights,",
+      fr:"G Boutique Hotel's gym is a state-of-the-art fitness facility, designed to cater to guests who want to maintain their workout routine while enjoying a luxurious stay. Equipped with modern machines, including rowing machine, and free weights,",
+      es:"G Boutique Hotel's gym is a state-of-the-art fitness facility, designed to cater to guests who want to maintain their workout routine while enjoying a luxurious stay. Equipped with modern machines, including rowing machine, and free weights,"
+    },
+    img:"assets/about_gym.jpg"
+  }
+];
+
+const PAGES = {
+  about: {
+    title: { el:"ABOUT US", en:"ABOUT US", it:"ABOUT US", fr:"ABOUT US", es:"ABOUT US" },
+    subtitle: { el:"G Boutique Hotel Kefalonia", en:"G Boutique Hotel Kefalonia", it:"SG Boutique Hotel Kefalonia", fr:"G Boutique Hotel Kefalonia", es:"G Boutique Hotel Kefalonia" },
+    desc: {
+      el:"An elegant residence in a prime coastal location.\nOffering privacy, comfort, and a close connection to nature.",
+      en:"An elegant residence in a prime coastal location.\nOffering privacy, comfort, and a close connection to nature.",
+      it:"An elegant residence in a prime coastal location.\nOffering privacy, comfort, and a close connection to nature.",
+      fr:"An elegant residence in a prime coastal location.\nOffering privacy, comfort, and a close connection to nature.",
+      es:"An elegant residence in a prime coastal location.\nOffering privacy, comfort, and a close connection to nature."
+    }
+  },
+  close: {
+    title: { el:"CLOSE TO US", en:"CLOSE TO US", it:"VICINO A NOI", fr:"PRÈS DE NOUS", es:"CERCA DE NOSOTROS" },
+    text: {
+      el:"The area is ideally located on the Paliki peninsula, close to the town of Lixouri, offering a perfect balance between nature and local life.\\n\\nSeveral beautiful beaches are just a short distance away, including Vatsa Beach and Vrachinari Beach, known for their clear waters and peaceful surroundings.\\n\\nGuests can enjoy traditional seaside restaurants nearby, serving fresh seafood and local Kefalonian dishes.\\n\\nThe area is quiet and green, with easy access to the sea, making it ideal for relaxation, swimming, and exploring authentic villages.\\n\\nEverything needed for a comfortable and enjoyable stay is within close reach, while still offering privacy and tranquility.",
+      en:"The area is ideally located on the Paliki peninsula, close to the town of Lixouri, offering a perfect balance between nature and local life.\\n\\nSeveral beautiful beaches are just a short distance away, including Vatsa Beach and Vrachinari Beach, known for their clear waters and peaceful surroundings.\\n\\nGuests can enjoy traditional seaside restaurants nearby, serving fresh seafood and local Kefalonian dishes.\\n\\nThe area is quiet and green, with easy access to the sea, making it ideal for relaxation, swimming, and exploring authentic villages.\\n\\nEverything needed for a comfortable and enjoyable stay is within close reach, while still offering privacy and tranquility.",
+      it:"The area is ideally located on the Paliki peninsula, close to the town of Lixouri, offering a perfect balance between nature and local life.\\n\\nSeveral beautiful beaches are just a short distance away, including Vatsa Beach and Vrachinari Beach, known for their clear waters and peaceful surroundings.\\n\\nGuests can enjoy traditional seaside restaurants nearby, serving fresh seafood and local Kefalonian dishes.\\n\\nThe area is quiet and green, with easy access to the sea, making it ideal for relaxation, swimming, and exploring authentic villages.\\n\\nEverything needed for a comfortable and enjoyable stay is within close reach, while still offering privacy and tranquility.",
+      fr:"The area is ideally located on the Paliki peninsula, close to the town of Lixouri, offering a perfect balance between nature and local life.\\n\\nSeveral beautiful beaches are just a short distance away, including Vatsa Beach and Vrachinari Beach, known for their clear waters and peaceful surroundings.\\n\\nGuests can enjoy traditional seaside restaurants nearby, serving fresh seafood and local Kefalonian dishes.\\n\\nThe area is quiet and green, with easy access to the sea, making it ideal for relaxation, swimming, and exploring authentic villages.\\n\\nEverything needed for a comfortable and enjoyable stay is within close reach, while still offering privacy and tranquility.",
+      es:"The area is ideally located on the Paliki peninsula, close to the town of Lixouri, offering a perfect balance between nature and local life.\\n\\nSeveral beautiful beaches are just a short distance away, including Vatsa Beach and Vrachinari Beach, known for their clear waters and peaceful surroundings.\\n\\nGuests can enjoy traditional seaside restaurants nearby, serving fresh seafood and local Kefalonian dishes.\\n\\nThe area is quiet and green, with easy access to the sea, making it ideal for relaxation, swimming, and exploring authentic villages.\\n\\nEverything needed for a comfortable and enjoyable stay is within close reach, while still offering privacy and tranquility."
+    },
+    photos:["assets/close_map.jpg"]
+  },
+  lixouri: {
+    title: { el:"LIXOURI", en:"LIXOURI", it:"LIXOURI", fr:"LIXOURI", es:"LIXOURI" },
+    text: {
+      el:"Lixouri Sightseeing",
+      en:"Lixouri Sightseeing",
+      it:"Lixouri Sightseeing",
+      fr:"Lixouri Sightseeing",
+      es:"Lixouri Sightseeing"
+    },
+    photos:[
+      {
+        title:"Monastery of Kipoureon",
+        text:"A beautiful cliffside monastery offering breathtaking views of the Ionian Sea. It's a peaceful place and one of the best sunset spots in western Kefalonia.",
+        img:"assets/lixouri_kipoureon.jpg"
+      },
+      {
+        title:"Lixouri Square",
+        text:"The heart of the town, full of cafés and local life. A great place for a walk, coffee, and experiencing the everyday vibe of Lixouri.",
+        img:"assets/lixouri_square.jpg"
+      },
+      {
+        title:"Lighthouse",
+        text:"A historic lighthouse located at the edge of the Paliki peninsula, offering panoramic sea views and dramatic sunsets.",
+        img:"assets/lixouri_lighthouse.jpg"
+      },
+      {
+        title:"Andreas Laskaratos Statue",
+        text:"A renowned satirical writer and poet born in Lixouri. It stands as a symbol of the town’s strong cultural and literary tradition.",
+        img:"assets/lixouri_laskaratos.jpg"
+      },
+      {
+        title:"Church of Pantokrator",
+        text:"The Church of Pantokrator plays an important role in the religious life of Lixouri. It is known for its simple yet dignified appearance and peaceful atmosphere.",
+        img:"assets/lixouri_pantokrator.jpg"
+      }
+    ],
+beaches:[
+      {
+        title:"Makris Gialos Beach",
+        text:"A long, sandy and well-organized beach very close to Argostoli with easy access. It’s popular for its golden sand, clear water, and facilities like umbrellas, sunbeds and tavernas nearby. Great choice for families or anyone who wants a classic beach day.",
+        img:"assets/close_beach_makris.jpg"
+      },
+      {
+        title:"Platis Gialos Beach",
+        text:"Platis Gialos Beach is one of the most beautiful and popular beaches near Argostoli, located right next to Makris Gialos (about 5 minutes by car from the town center).",
+        img:"assets/close_beach_platis.jpg"
+      },
+      {
+        title:"Kalamia Beach",
+        text:"Kalamia Beach is a small, beautiful cove located very close to the center of Argostoli, making it one of the most convenient beaches in the area.",
+        img:"assets/close_beach_kalamia.jpg"
+      }
+    ]},
+
+  argostoli: {
+    title: { el:"ΑΡΓΟΣΤΟΛΙ", en:"ARGOSTOLI", it:"ARGOSTOLI", fr:"ARGOSTOLI", es:"ARGOSTOLI" },
+    text: {
+      el:"Argostoli Sightseeing",
+      en:"Argostoli Sightseeing",
+      it:"Argostoli Sightseeing",
+      fr:"Argostoli Sightseeing",
+      es:"Argostoli Sightseeing"
+    },
+    
+    beaches: [
+      { title:"Makris Gialos", text:"Golden sand, clear waters, lively beach bars and sunbeds. 📍 Distance: ~3 km from Argostoli", img:"assets/argostoli_beach_makris_gialos.jpg" },
+      { title:"Platis Gialos", text:"Wide sandy beach, calmer atmosphere, ideal for families. 📍 Distance: ~3 km from Argostoli", img:"assets/argostoli_beach_platis_gialos.jpg" },
+      { title:"Gradakia", text:"Small and cozy beach with deep blue waters and a relaxed vibe. 📍 Distance: ~2 km from Argostoli", img:"assets/argostoli_beach_gradakia.jpg" },
+      { title:"Kalamia", text:"Quiet pebble beach with crystal-clear water, perfect for a quick swim. 📍 Distance: ~1 km from Argostoli", img:"assets/argostoli_beach_kalamia.jpg" }
+    ],
+photos:[
+      { title:"De Bosset Bridge", text:"This historic stone bridge connects the harbour with the Koutavos lagoon and is one of Argostoli’s most iconic landmarks. Perfect for a scenic walk with views over town and sea.", img:"assets/argostoli_bridge.jpg" },
+      { title:"Saint Theodoroi Lighthouse", text:"A historic lighthouse near Argostoli offering lovely coastal views and a peaceful walk — excellent for photos and seeing more of the island's natural beauty.", img:"assets/argostoli_lighthouse.jpg" },
+      { title:"Botanical Garden", text:"A lovely botanical garden just south of town where you can explore local plants, herbs, and nature trails — perfect for a relaxed morning outdoors.", img:"assets/argostoli_botanical.jpg" },
+      { title:"Koutavos Lagoon", text:"A protected natural lagoon next to Argostoli, home to birds and wildlife. It's a peaceful place for walking, cycling, and enjoying nature close to the town center.", img:"assets/argostoli_lagoon.jpg" },
+      { title:"Korgialenios Library", text:"One of the most important cultural institutions in Kefalonia. The library hosts thousands of books, rare manuscripts, historical archives, and local publications, and often organizes exhibitions and cultural events.", img:"assets/argostoli_library.jpg" }
+    ]
+  },
+  kefalonia: {
+    title: { el:"ΚΕΦΑΛΟΝΙΑ", en:"KEFALONIA", it:"CEFALONIA", fr:"CÉPHALONIE", es:"CEFALONIA" },
+    text: {
+      el:"Τα must του νησιού: παραλίες, αξιοθέατα, δραστηριότητες.",
+      en:"Island must-sees: beaches, sights, activities.",
+      it:"Da non perdere: spiagge, luoghi, attività.",
+      fr:"Incontournables : plages, sites, activités.",
+      es:"Imprescindibles: playas, lugares, actividades."
+    },
+    photos:[]
+  }
+,
+
+  tours: {
+    title: { el:"TOURS", en:"TOURS", it:"TOURS", fr:"TOURS", es:"TOURS" },
+    text:  { el:"", en:"", it:"", fr:"", es:"" },
+    photos:[
+      {
+        title:"Private Tour",
+        text:"Enjoy a personalized touring experience tailored to your interests and schedule. With a private guide or driver, discover top attractions in comfort, flexibility, and exclusivity. For more details contact us in reseption via What's up +306940093630.",
+        img:"assets/tour_private.jpg"
+      },
+      {
+        title:"Car Rental",
+        text:"Explore your destination with complete freedom by choosing the perfect vehicle for your needs. Comfort, safety, and flexibility allow you to create your own itinerary.For more details contact us in reseption via What's up +306940093630.",
+        img:"assets/tour_car_rental.jpg"
+      },
+      {
+        title:"Boat Tour",
+        text:"Experience the beauty of the sea as you discover hidden coves and breathtaking coastal views. Relax on board with an experienced captain and enjoy unforgettable moments on the water.For more details contact us in reseption via What's up +306940093630.",
+        img:"assets/tour_boat_tour.jpg",
+        go:"boatTourArticle"
+      },
+      {
+        title:"Boat Rental",
+        text:"Rent your own boat and become the captain of your day. The perfect option for private getaways, offering total freedom and memorable moments at sea. For more details contact us in reseption via What's up +306940093630.",
+        img:"assets/tour_boat_rental.jpg",
+        link:"https://kefaloniaboatrental.com/"
+      },
+      {
+        title:"Wine Tasting",
+        text:"Discover the soul of Kefalonia through a sensory Wine Tasting journey that transforms every sip into a story of tradition and terroir. By following the ritual of See, Swirl, Sniff, and Sip, you will unlock the vibrant aromas of wild flowers and the crisp, mineral character of our world-renowned Robola. This experience is a perfect harmony of local flavors, inviting you to slow down and savor the authentic liquid gold of the Ionian.For more details contact us in reseption via What's up +306940093630.",
+        img:"assets/tour_wine_tasting.jpg"
+      }
+    ]
+  },
+
+
+  boatTourArticle: {
+    title: { el:"BOAT TOURS", en:"BOAT TOURS", it:"BOAT TOURS", fr:"BOAT TOURS", es:"BOAT TOURS" },
+    text:  { el:"", en:"", it:"", fr:"", es:"" },
+    photos:[
+      {
+        title:"Boat Tours in Kefalonia",
+        isArticle:true,
+        text:`<div class="articleWrap">
+  <div class="articleIntro">
+    <h2>Boat Tours in Kefalonia</h2>
+    <p>Set sail from the vibrant port of Argostoli and discover the hidden coastal gems of Kefalonia through a variety of curated boat excursions tailored to every traveler’s dream.</p>
+    <p>Whether you are looking to immerse yourself in timeless Greek tradition, indulge in modern Mediterranean luxury, or witness the magic of an Ionian sunset with a cocktail in hand, our premier cruise partners offer the perfect escape.</p>
+    <p>From secret white-sand coves accessible only by sea to gourmet island flavors served on deck, explore our top recommendations below and find the ultimate voyage to define your summer holiday.</p>
+  </div>
+
+  <div class="articleRow">
+    <img src="assets/boat_tour_queen_bee.jpg" class="articleImg" alt="Queen Bee Boat Tour" loading="lazy">
+    <div class="articleText">
+      <h3>1. Queen Bee – Traditional Greek Hospitality</h3>
+      <p>The Queen Bee is a beautiful, traditional wooden boat (kaiki) known for its authentic atmosphere and exceptional service.</p>
+      <p class="articleMeta"><b>The Route:</b> Typically departs from Argostoli port at 09:00. It cruises along the coastline to the White Rocks (paradisiacal white cliffs only accessible by boat), then moves toward Vardiani Island (Rabbit Island) and the red-sand beaches of Xi.</p>
+      <p class="articleMeta"><b>The Experience:</b> Known for the "Captain’s Lunch." Guests are served fresh, home-cooked Greek dishes (like moussaka or local pies) and unlimited local wine.</p>
+      <p class="articleMeta"><b>Best For:</b> Families and groups looking for a full-day (approx. 7-8 hours), relaxed, and culturally authentic experience.</p>
+    </div>
+  </div>
+
+  <div class="articleRow reverse">
+    <img src="assets/boat_tour_dreamy_cruises.jpg" class="articleImg" alt="Dreamy Cruises Boat Tour" loading="lazy">
+    <div class="articleText">
+      <h3>2. Dreamy Cruises (Dreamy Sails) – The Luxury of Choice</h3>
+      <p>Dreamy Cruises offers a more modern fleet, often using sleek sailing yachts or catamarans.</p>
+      <p class="articleMeta"><b>The Route:</b> They specialize in both the Argostoli coastline and longer trips. A popular itinerary includes the South Coast Tour, visiting Minies, Spartia, and the secluded Pessada coves.</p>
+      <p class="articleMeta"><b>The Experience:</b> They focus on all-inclusive luxury. Think high-quality snorkeling gear, paddleboards (SUPs) provided on board, and a menu that often includes fresh seafood or BBQ options.</p>
+      <p class="articleMeta"><b>Best For:</b> Guests who prefer a more modern, chic sailing vibe and want to use water toys during swim stops.</p>
+    </div>
+  </div>
+
+  <div class="articleRow">
+    <img src="assets/boat_tour_lady_o.jpg" class="articleImg" alt="Lady O Sunset Cruise" loading="lazy">
+    <div class="articleText">
+      <h3>3. Lady O – The Ultimate Sunset & Social Cruise</h3>
+      <p>The Lady O is a large, comfortable motor vessel that offers a stable ride and plenty of deck space.</p>
+      <p class="articleMeta"><b>The Route:</b> While they do daily trips, their Sunset Cruise is the standout. It departs in the late afternoon, cruising past the Lassi coastline and the Lighthouse of Saint Theodore.</p>
+      <p class="articleMeta"><b>The Experience:</b> It’s a floating party with a touch of class. As the sun sets, they serve dinner and cocktails with music playing. It includes stops for a moonlight swim, which is a highlight for many tourists.</p>
+      <p class="articleMeta"><b>Best For:</b> Couples, honeymooners, and groups of friends looking for a romantic or social evening atmosphere.</p>
+    </div>
+  </div>
+</div>`,
+        img:"assets/tour_boat_tour.jpg"
+      }
+    ]
+  },
+
+  logo: {
+
+    title: { el:"ISIDORAS", en:"ISIDORAS", it:"ISIDORAS", fr:"ISIDORAS", es:"ISIDORAS" },
+    text:  { el:"", en:"", it:"", fr:"", es:"" },
+    photos:["assets/menu_isidoras_logo.png"]
+  }
+
+};
+
+const screens = {
+  splash: document.getElementById("splash"),
+  home: document.getElementById("home"),
+  page: document.getElementById("page")
+};
+const pageTopTitle = document.getElementById("pageTopTitle");
+const pageCard = document.getElementById("pageCard");
+
+let currentLang = "en";
+
+function t(key){
+  const d = I18N[currentLang] || I18N.en;
+  return d[key] || (I18N.en[key] || key);
+}
+
+function pickLang(obj){
+  if(!obj) return "";
+  return obj[currentLang] || obj.en || obj.el || "";
+}
+
+let currentPageKey = null;
+
+function show(screenId){
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[screenId].classList.add("active");
+}
+
+function escapeHtml(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+const REGION_SIGHTSEENS = {
+  kefalonia: [
+
+    {
+      img:"assets/kef_melissani.jpg",
+      title:{el:"Σπήλαιο Μελισσάνης", en:"Melissani Cave", it:"Grotta di Melissani", fr:"Grotte de Mélissani", es:"Cueva de Melissani"},
+      desc:{
+        el:"Μαγευτική υπόγεια λίμνη με κρυστάλλινα γαλάζια νερά. Εξερεύνηση με βαρκάκι όταν ο ήλιος φωτίζει το σπήλαιο.",
+        en:"A magical underground lake with crystal-clear blue water, explored by boat when sunlight enters the cave.",
+        it:"Un lago sotterraneo magico dalle acque blu cristalline, visitabile in barca quando entra la luce del sole.",
+        fr:"Un lac souterrain magique aux eaux bleu cristal, à découvrir en barque lorsque la lumière pénètre la grotte.",
+        es:"Un lago subterráneo mágico de aguas azules cristalinas, se visita en barca cuando entra la luz del sol."
+      }
+    },
+    {
+      img:"assets/kef_drogarati.jpg",
+      title:{el:"Σπήλαιο Δρογκαράτης", en:"Drogarati Cave", it:"Grotta di Drogarati", fr:"Grotte de Drogarati", es:"Cueva de Drogarati"},
+      desc:{
+        el:"Ένα από τα πιο εντυπωσιακά σπήλαια της Κεφαλονιάς, με σταλακτίτες/σταλαγμίτες και εξαιρετική ακουστική.",
+        en:"One of Kefalonia’s most impressive caves, famous for its stalactites, stalagmites, and remarkable acoustics.",
+        it:"Una delle grotte più impressionanti di Cefalonia, famosa per stalattiti, stalagmiti e un’acustica notevole.",
+        fr:"L’une des grottes les plus impressionnantes de Céphalonie, célèbre pour ses stalactites, stalagmites et son acoustique.",
+        es:"Una de las cuevas más impresionantes de Cefalonia, famosa por sus estalactitas, estalagmitas y su acústica."
+      }
+    },
+    {
+      img:"assets/kef_assos.jpg",
+      title:{el:"Χωριό Άσσος", en:"Assos Village", it:"Villaggio di Assos", fr:"Village d’Assos", es:"Pueblo de Assos"},
+      desc:{
+        el:"Γραφικό παραθαλάσσιο χωριό σε στενή χερσόνησο, με πολύχρωμα σπίτια και θέα στο ενετικό κάστρο.",
+        en:"A picturesque seaside village on a narrow peninsula, known for colorful houses and views towards the Venetian castle.",
+        it:"Un pittoresco villaggio sul mare su una stretta penisola, con case colorate e vista sul castello veneziano.",
+        fr:"Charmant village en bord de mer sur une presqu’île, maisons colorées et vue sur le château vénitien.",
+        es:"Pintoresco pueblo costero en una estrecha península, con casas coloridas y vistas al castillo veneciano."
+      }
+    },
+    {
+      img:"assets/kef_fiskardo.jpg",
+      title:{el:"Φισκάρδο", en:"Fiskardo", it:"Fiskardo", fr:"Fiskardo", es:"Fiskardo"},
+      desc:{
+        el:"Γοητευτικό λιμανάκι με διατηρημένη αρχιτεκτονική, ζωντανή παραλιακή και όμορφες βόλτες στο νερό.",
+        en:"A charming harbor village famous for its preserved architecture, lively waterfront, and scenic seaside strolls.",
+        it:"Un grazioso villaggio portuale famoso per l’architettura preservata, il lungomare vivace e le passeggiate.",
+        fr:"Joli village portuaire connu pour son architecture préservée, son front de mer animé et ses balades.",
+        es:"Encantador pueblo con puerto, famoso por su arquitectura conservada, paseo marítimo animado y caminatas."
+      }
+    }
+  
+  ],
+  lixouri: [
+    {
+      img:"assets/lixouri_kipoureon.jpg",
+      title:{el:"Monastery of Kipoureon", en:"Monastery of Kipoureon", it:"Monastery of Kipoureon", fr:"Monastery of Kipoureon", es:"Monastery of Kipoureon"},
+      desc:{el:"A beautiful cliffside monastery offering breathtaking views of the Ionian Sea. It's a peaceful place and one of the best sunset spots in western Kefalonia.", en:"A beautiful cliffside monastery offering breathtaking views of the Ionian Sea. It's a peaceful place and one of the best sunset spots in western Kefalonia.", it:"A beautiful cliffside monastery offering breathtaking views of the Ionian Sea. It's a peaceful place and one of the best sunset spots in western Kefalonia.", fr:"A beautiful cliffside monastery offering breathtaking views of the Ionian Sea. It's a peaceful place and one of the best sunset spots in western Kefalonia.", es:"A beautiful cliffside monastery offering breathtaking views of the Ionian Sea. It's a peaceful place and one of the best sunset spots in western Kefalonia."}
+    },
+    {
+      img:"assets/lixouri_square.jpg",
+      title:{el:"Lixouri Square", en:"Lixouri Square", it:"Lixouri Square", fr:"Lixouri Square", es:"Lixouri Square"},
+      desc:{el:"The heart of the town, full of cafés and local life. A great place for a walk, coffee, and experiencing the everyday vibe of Lixouri.", en:"The heart of the town, full of cafés and local life. A great place for a walk, coffee, and experiencing the everyday vibe of Lixouri.", it:"The heart of the town, full of cafés and local life. A great place for a walk, coffee, and experiencing the everyday vibe of Lixouri.", fr:"The heart of the town, full of cafés and local life. A great place for a walk, coffee, and experiencing the everyday vibe of Lixouri.", es:"The heart of the town, full of cafés and local life. A great place for a walk, coffee, and experiencing the everyday vibe of Lixouri."}
+    },
+    {
+      img:"assets/lixouri_lighthouse.jpg",
+      title:{el:"Lighthouse", en:"Lighthouse", it:"Lighthouse", fr:"Lighthouse", es:"Lighthouse"},
+      desc:{el:"A historic lighthouse located at the edge of the Paliki peninsula, offering panoramic sea views and dramatic sunsets.", en:"A historic lighthouse located at the edge of the Paliki peninsula, offering panoramic sea views and dramatic sunsets.", it:"A historic lighthouse located at the edge of the Paliki peninsula, offering panoramic sea views and dramatic sunsets.", fr:"A historic lighthouse located at the edge of the Paliki peninsula, offering panoramic sea views and dramatic sunsets.", es:"A historic lighthouse located at the edge of the Paliki peninsula, offering panoramic sea views and dramatic sunsets."}
+    },
+    {
+      img:"assets/lixouri_laskaratos.jpg",
+      title:{el:"Andreas Laskaratos Statue", en:"Andreas Laskaratos Statue", it:"Andreas Laskaratos Statue", fr:"Andreas Laskaratos Statue", es:"Andreas Laskaratos Statue"},
+      desc:{el:"A renowned satirical writer and poet born in Lixouri. It stands as a symbol of the town’s strong cultural and literary tradition.", en:"A renowned satirical writer and poet born in Lixouri. It stands as a symbol of the town’s strong cultural and literary tradition.", it:"A renowned satirical writer and poet born in Lixouri. It stands as a symbol of the town’s strong cultural and literary tradition.", fr:"A renowned satirical writer and poet born in Lixouri. It stands as a symbol of the town’s strong cultural and literary tradition.", es:"A renowned satirical writer and poet born in Lixouri. It stands as a symbol of the town’s strong cultural and literary tradition."}
+    },
+    {
+      img:"assets/lixouri_pantokrator.jpg",
+      title:{el:"Church of Pantokrator", en:"Church of Pantokrator", it:"Church of Pantokrator", fr:"Church of Pantokrator", es:"Church of Pantokrator"},
+      desc:{el:"The Church of Pantokrator plays an important role in the religious life of Lixouri. It is known for its simple yet dignified appearance and peaceful atmosphere.", en:"The Church of Pantokrator plays an important role in the religious life of Lixouri. It is known for its simple yet dignified appearance and peaceful atmosphere.", it:"The Church of Pantokrator plays an important role in the religious life of Lixouri. It is known for its simple yet dignified appearance and peaceful atmosphere.", fr:"The Church of Pantokrator plays an important role in the religious life of Lixouri. It is known for its simple yet dignified appearance and peaceful atmosphere.", es:"The Church of Pantokrator plays an important role in the religious life of Lixouri. It is known for its simple yet dignified appearance and peaceful atmosphere."}
+    }
+  ],
+  argostoli: [
+    {
+      img:"assets/argostoli_bridge.jpg",
+      title:{el:"De Bosset Bridge", en:"De Bosset Bridge", it:"De Bosset Bridge", fr:"De Bosset Bridge", es:"De Bosset Bridge"},
+      desc:{el:"This historic stone bridge connects the harbour with the Koutavos lagoon and is one of Argostoli’s most iconic landmarks. Perfect for a scenic walk with views over town and sea.", en:"This historic stone bridge connects the harbour with the Koutavos lagoon and is one of Argostoli’s most iconic landmarks. Perfect for a scenic walk with views over town and sea.", it:"This historic stone bridge connects the harbour with the Koutavos lagoon and is one of Argostoli’s most iconic landmarks. Perfect for a scenic walk with views over town and sea.", fr:"This historic stone bridge connects the harbour with the Koutavos lagoon and is one of Argostoli’s most iconic landmarks. Perfect for a scenic walk with views over town and sea.", es:"This historic stone bridge connects the harbour with the Koutavos lagoon and is one of Argostoli’s most iconic landmarks. Perfect for a scenic walk with views over town and sea."}
+    },
+    {
+      img:"assets/argostoli_lighthouse.jpg",
+      title:{el:"Saint Theodoroi Lighthouse", en:"Saint Theodoroi Lighthouse", it:"Saint Theodoroi Lighthouse", fr:"Saint Theodoroi Lighthouse", es:"Saint Theodoroi Lighthouse"},
+      desc:{el:"A historic lighthouse near Argostoli offering lovely coastal views and a peaceful walk — excellent for photos and seeing more of the island's natural beauty.", en:"A historic lighthouse near Argostoli offering lovely coastal views and a peaceful walk — excellent for photos and seeing more of the island's natural beauty.", it:"A historic lighthouse near Argostoli offering lovely coastal views and a peaceful walk — excellent for photos and seeing more of the island's natural beauty.", fr:"A historic lighthouse near Argostoli offering lovely coastal views and a peaceful walk — excellent for photos and seeing more of the island's natural beauty.", es:"A historic lighthouse near Argostoli offering lovely coastal views and a peaceful walk — excellent for photos and seeing more of the island's natural beauty."}
+    },
+    {
+      img:"assets/argostoli_botanical.jpg",
+      title:{el:"Botanical Garden", en:"Botanical Garden", it:"Botanical Garden", fr:"Botanical Garden", es:"Botanical Garden"},
+      desc:{el:"A lovely botanical garden just south of town where you can explore local plants, herbs, and nature trails — perfect for a relaxed morning outdoors.", en:"A lovely botanical garden just south of town where you can explore local plants, herbs, and nature trails — perfect for a relaxed morning outdoors.", it:"A lovely botanical garden just south of town where you can explore local plants, herbs, and nature trails — perfect for a relaxed morning outdoors.", fr:"A lovely botanical garden just south of town where you can explore local plants, herbs, and nature trails — perfect for a relaxed morning outdoors.", es:"A lovely botanical garden just south of town where you can explore local plants, herbs, and nature trails — perfect for a relaxed morning outdoors."}
+    },
+    {
+      img:"assets/argostoli_lagoon.jpg",
+      title:{el:"Koutavos Lagoon", en:"Koutavos Lagoon", it:"Koutavos Lagoon", fr:"Koutavos Lagoon", es:"Koutavos Lagoon"},
+      desc:{el:"A protected natural lagoon next to Argostoli, home to birds and wildlife. It's a peaceful place for walking, cycling, and enjoying nature close to the town center.", en:"A protected natural lagoon next to Argostoli, home to birds and wildlife. It's a peaceful place for walking, cycling, and enjoying nature close to the town center.", it:"A protected natural lagoon next to Argostoli, home to birds and wildlife. It's a peaceful place for walking, cycling, and enjoying nature close to the town center.", fr:"A protected natural lagoon next to Argostoli, home to birds and wildlife. It's a peaceful place for walking, cycling, and enjoying nature close to the town center.", es:"A protected natural lagoon next to Argostoli, home to birds and wildlife. It's a peaceful place for walking, cycling, and enjoying nature close to the town center."}
+    },
+    {
+      img:"assets/argostoli_library.jpg",
+      title:{el:"Korgialenios Library", en:"Korgialenios Library", it:"Korgialenios Library", fr:"Korgialenios Library", es:"Korgialenios Library"},
+      desc:{el:"One of the most important cultural institutions in Kefalonia. The library hosts thousands of books, rare manuscripts, historical archives, and local publications, and often organizes exhibitions and cultural events.", en:"One of the most important cultural institutions in Kefalonia. The library hosts thousands of books, rare manuscripts, historical archives, and local publications, and often organizes exhibitions and cultural events.", it:"One of the most important cultural institutions in Kefalonia. The library hosts thousands of books, rare manuscripts, historical archives, and local publications, and often organizes exhibitions and cultural events.", fr:"One of the most important cultural institutions in Kefalonia. The library hosts thousands of books, rare manuscripts, historical archives, and local publications, and often organizes exhibitions and cultural events.", es:"One of the most important cultural institutions in Kefalonia. The library hosts thousands of books, rare manuscripts, historical archives, and local publications, and often organizes exhibitions and cultural events."}
+    }
+  ]
+};
+
+const OTHER_BEACHES = [
+  {
+    id:"myrtos",
+    title:{ el:"Μύρτος", en:"Myrtos", it:"Myrtos", fr:"Myrtos", es:"Myrtos" },
+    desc:{
+      el:"Μία από τις πιο διάσημες παραλίες της Ελλάδας, γνωστή για τους εντυπωσιακούς γκρεμούς και τα βαθιά γαλάζια νερά. Ιδανική για κολύμπι και φωτογραφίες.",
+      en:"One of the most famous beaches in Greece, known for its dramatic cliffs and deep blue waters. A stunning spot for swimming and photos.",
+      it:"One of the most famous beaches in Greece, known for its dramatic cliffs and deep blue waters. A stunning spot for swimming and photos.",
+      fr:"One of the most famous beaches in Greece, known for its dramatic cliffs and deep blue waters. A stunning spot for swimming and photos.",
+      es:"One of the most famous beaches in Greece, known for its dramatic cliffs and deep blue waters. A stunning spot for swimming and photos."
+    }
+  },
+  {
+    id:"skala",
+    title:{ el:"Σκάλα", en:"Skala", it:"Skala", fr:"Skala", es:"Skala" },
+    desc:{
+      el:"Η παραλία Σκάλα είναι μεγάλη και αμμώδης, με καθαρά γαλάζια νερά και ήπια κλίση — ιδανική για κολύμπι. Είναι μερικώς οργανωμένη, αλλά διαθέτει και πιο ήσυχα σημεία.",
+      en:"Skala Beach is a long, sandy beach with clear blue waters and a gentle slope, ideal for swimming. It’s partly organized with sunbeds and beach bars, but also has quieter spots for a peaceful swim.",
+      it:"Skala Beach is a long, sandy beach with clear blue waters and a gentle slope, ideal for swimming. It’s partly organized with sunbeds and beach bars, but also has quieter spots for a peaceful swim.",
+      fr:"Skala Beach is a long, sandy beach with clear blue waters and a gentle slope, ideal for swimming. It’s partly organized with sunbeds and beach bars, but also has quieter spots for a peaceful swim.",
+      es:"Skala Beach is a long, sandy beach with clear blue waters and a gentle slope, ideal for swimming. It’s partly organized with sunbeds and beach bars, but also has quieter spots for a peaceful swim."
+    }
+  },
+  {
+    id:"antisamos",
+    title:{ el:"Αντίσαμος", en:"Antisamos", it:"Antisamos", fr:"Antisamos", es:"Antisamos" },
+    desc:{
+      el:"Εντυπωσιακή παραλία κοντά στη Σάμη, περιτριγυρισμένη από πράσινους λόφους. Φημίζεται για τα καθαρά, γαλάζια νερά και τις ευκαιρίες για snorkeling.",
+      en:"A stunning beach near Sami, surrounded by green hills. Known for its clear blue waters and snorkeling opportunities.",
+      it:"A stunning beach near Sami, surrounded by green hills. Known for its clear blue waters and snorkeling opportunities.",
+      fr:"A stunning beach near Sami, surrounded by green hills. Known for its clear blue waters and snorkeling opportunities.",
+      es:"A stunning beach near Sami, surrounded by green hills. Known for its clear blue waters and snorkeling opportunities."
+    }
+  },
+  {
+    id:"fteri",
+    title:{ el:"Φτέρη", en:"Fteri", it:"Fteri", fr:"Fteri", es:"Fteri" },
+    desc:{
+      el:"Η παραλία Φτέρη είναι από τις πιο όμορφες και ανέγγιχτες στην Κεφαλονιά. Βρίσκεται στην χερσόνησο της Παλικής και ξεχωρίζει για τους λευκούς βράχους, τα τιρκουάζ νερά και το άγριο φυσικό τοπίο.",
+      en:"Fteri Beach is one of the most beautiful and unspoiled beaches in Kefalonia. Located on the Paliki peninsula, it’s known for its white cliffs, turquoise waters, and wild natural scenery.",
+      it:"Fteri Beach is one of the most beautiful and unspoiled beaches in Kefalonia. Located on the Paliki peninsula, it’s known for its white cliffs, turquoise waters, and wild natural scenery.",
+      fr:"Fteri Beach is one of the most beautiful and unspoiled beaches in Kefalonia. Located on the Paliki peninsula, it’s known for its white cliffs, turquoise waters, and wild natural scenery.",
+      es:"Fteri Beach is one of the most beautiful and unspoiled beaches in Kefalonia. Located on the Paliki peninsula, it’s known for its white cliffs, turquoise waters, and wild natural scenery."
+    }
+  }
+];
+
+const REGION_RESTAURANTS = {
+  lixouri: [
+    { img:"assets/rest_comidora.jpg", label:"Comidoro (4.8 ★)",
+      desc:{ el:"Μεσογειακή και ελληνική κουζίνα με ποιοτικά υλικά. Ιδανικό για χαλαρό γεύμα με πιο προσεγμένο ύφος.",
+            en:"Mediterranean and Greek cuisine with quality ingredients. Great for a relaxed meal with slightly upscale style.",
+            it:"Cucina mediterranea e greca con ingredienti di qualità. Perfetto per un pasto rilassato con stile curato.",
+            fr:"Cuisine méditerranéenne et grecque avec des produits de qualité. Idéal pour un repas détendu, un peu plus chic.",
+            es:"Cocina mediterránea y griega con ingredientes de calidad. Ideal para una comida tranquila con un toque más elegante." } },
+    { img:"assets/rest_gefyra.jpg", label:"H Gefira (4.8 ★)",
+      desc:{ el:"Εξαιρετικά δημοφιλές ουζερί κοντά στο λιμάνι — ιδανικό για μεζέδες και κλασικά ελληνικά πιάτα.",
+            en:"Very highly rated Greek ouzeri near the port — great for meze and classic Greek dishes.",
+            it:"Ouzeri greco molto apprezzato vicino al porto — ottimo per meze e piatti classici greci.",
+            fr:"Ouzeri grec très bien noté près du port — parfait pour les mezzés et les classiques grecs.",
+            es:"Ouzerí griego muy valorado cerca del puerto — ideal para meze y platos griegos clásicos." } },
+    { img:"assets/rest_mparaka.jpg", label:"Mparaka (4.8 ★)",
+      desc:{ el:"Αγαπημένο για αυθεντικό μεζεδοπωλείο και τοπικές γεύσεις.",
+            en:"Loved for authentic mezedopoleio (meze-style) dining and local flavors.",
+            it:"Amato per l’autentica esperienza da mezedopoleio e i sapori locali.",
+            fr:"Apprécié pour son ambiance de mezedopoleio et ses saveurs locales.",
+            es:"Muy querido por su estilo de mezedopoleio y sabores locales." } },
+    { img:"assets/rest_tsilikos.jpg", label:"Tsilikos (4.8 ★)",
+      desc:{ el:"Κλασική ελληνική ταβέρνα με σταθερά υψηλές κριτικές και φιλική ατμόσφαιρα.",
+            en:"A classic Greek taverna with consistently high ratings and a friendly atmosphere.",
+            it:"Taverna greca classica con ottime recensioni e atmosfera accogliente.",
+            fr:"Taverne grecque classique, très bien notée, avec une ambiance chaleureuse.",
+            es:"Taberna griega clásica con excelentes reseñas y ambiente acogedor." } }
+  ],
+  argostoli: [
+    { img:"assets/argo_rest_arxontiko.jpg", label:"To “Arxontiko”",
+      desc:{ el:"Στην κεντρική πλατεία, σπιτικό φαγητό σε πολύ καλές τιμές. Δοκιμάστε τα γεμιστά κεφτεδάκια!",
+            en:"In the Central Square, homemade food at very good prices. Don’t forget to try the stuffed meatballs!",
+            it:"Nella piazza centrale, cucina casalinga a ottimi prezzi. Da provare le polpette ripiene!",
+            fr:"Sur la place centrale, cuisine maison à très bon prix. À goûter : les boulettes farcies !",
+            es:"En la plaza central, comida casera a muy buen precio. ¡Prueba las albóndigas rellenas!" },
+      location:"Rizospaston 5, Argostoli", servesKey:"servesLunchDinnerWine" },
+    { img:"assets/argo_rest_palia_plaka.jpg", label:"“Palia Plaka”",
+      desc:{ el:"Από τα πιο γνωστά σημεία της πόλης για παραδοσιακό φαγητό και ζεστή ατμόσφαιρα.",
+            en:"One of the city’s well-known spots for traditional food and a warm atmosphere.",
+            it:"Uno dei posti più conosciuti in città per cucina tradizionale e atmosfera accogliente.",
+            fr:"Une adresse réputée pour la cuisine traditionnelle et une ambiance chaleureuse.",
+            es:"Uno de los lugares más conocidos por comida tradicional y ambiente cálido." },
+      location:"Argostoli", servesKey:"servesLunchDinner" },
+    { img:"assets/argo_rest_spyros.jpg", label:"“O Spyros”",
+      desc:{ el:"Κλασική ταβέρνα με ελληνική κουζίνα και σταθερά καλές κριτικές.",
+            en:"A classic taverna with Greek cuisine and consistently good reviews.",
+            it:"Taverna classica con cucina greca e ottime recensioni.",
+            fr:"Taverne classique de cuisine grecque, très bien notée.",
+            es:"Taberna clásica de cocina griega con muy buenas reseñas." },
+      location:"Argostoli", servesKey:"servesLunchDinner" },
+    { img:"assets/argo_rest_sepia.jpg", label:"“Sepia”",
+      desc:{ el:"Επιλογή για θαλασσινά και πιο μοντέρνα πιάτα κοντά στη θάλασσα.",
+            en:"A great choice for seafood and modern dishes close to the sea.",
+            it:"Ottima scelta per pesce e piatti moderni vicino al mare.",
+            fr:"Très bon choix pour les fruits de mer et des plats modernes près de la mer.",
+            es:"Buena opción para marisco y platos modernos cerca del mar." },
+      location:"Argostoli", servesKey:"servesAllDay" }
+  ],
+  kefalonia: [
+    { img:"assets/argo_rest_alati.jpg", label:"Alati",
+      desc:{ el:"Παραθαλάσσιο εστιατόριο στην παραλία Άλατι με φρέσκια μεσογειακή/θαλασσινή κουζίνα και υπέροχο ηλιοβασίλεμα.",
+            en:"Seaside restaurant at Alati Beach with fresh Mediterranean & seafood dishes and stunning sunset views — perfect by the sea.",
+            it:"Ristorante sul mare ad Alati Beach con cucina mediterranea e di pesce fresca e splendidi tramonti.",
+            fr:"Restaurant en bord de mer à la plage d’Alati, cuisine méditerranéenne et fruits de mer, superbes couchers de soleil.",
+            es:"Restaurante junto al mar en la playa Alati con cocina mediterránea y mariscos frescos y vistas al atardecer." } },
+    { img:"assets/argo_rest_ammos.jpg", label:"Ammos Beach Bar & Restaurant (4.7)",
+      desc:{ el:"Χαλαρό beach spot στη Σκάλα με καλό φαγητό, κοκτέιλ και ωραίο vibe δίπλα στο κύμα.",
+            en:"Charming beachfront spot in Skala with great food, cocktails and relaxed vibes right by the water.",
+            it:"Locale sulla spiaggia a Skala con buon cibo, cocktail e atmosfera rilassata sul mare.",
+            fr:"Adresse en bord de plage à Skala : bonne cuisine, cocktails et ambiance détendue au bord de l’eau.",
+            es:"Lugar junto a la playa en Skala con buena comida, cócteles y ambiente relajado." } },
+    { img:"assets/argo_rest_alexandros.jpg", label:"Alexandros Restaurant",
+      desc:{ el:"Οικογενειακό εστιατόριο κοντά στη Μύρτο, με παραδοσιακά πιάτα και ψητά σε σκιερή αυλή.",
+            en:"Family-run restaurant near Myrtos Beach, serving traditional Greek and grilled dishes in a shaded garden setting.",
+            it:"Ristorante a gestione familiare vicino a Myrtos, con piatti tradizionali e grigliate in un giardino ombreggiato.",
+            fr:"Restaurant familial près de Myrtos, plats grecs traditionnels et grillades dans un jardin ombragé.",
+            es:"Restaurante familiar cerca de Myrtos, con platos tradicionales y parrilla en un jardín con sombra." } },
+    { img:"assets/argo_rest_olea.jpg", label:"Olea Restaurant",
+      desc:{ el:"Πιο σύγχρονη προσέγγιση ελληνικής κουζίνας με ωραία παρουσίαση και επιλογές για κρασί.",
+            en:"A more modern take on Greek cuisine with nice presentation and good wine options.",
+            it:"Interpretazione moderna della cucina greca, bella presentazione e buone opzioni di vino.",
+            fr:"Cuisine grecque revisitée, belle présentation et bonnes options de vin.",
+            es:"Una propuesta más moderna de cocina griega, buena presentación y opciones de vino." } }
+  ]
+};
+
+
+
+const CLOSE_RESTAURANTS = [
+  {
+    img: "assets/close_rest_palia_plaka.jpg",
+    label: "Palia Plaka Greek Restaurant (4.6)",
+    desc: {
+      en: "Very highly rated Greek & Mediterranean restaurant with excellent reviews for its traditional dishes and welcoming atmosphere — a top choice in town."
+    }
+  },
+  {
+    img: "assets/close_rest_arxontiko.jpg",
+    label: "To Arxontiko",
+    desc: {
+      en: "Classic traditional Greek tavern-style restaurant with great reviews for homemade food and friendly service. Known locally as a favorite for authentic Greek cuisine."
+    }
+  },
+  {
+    img: "assets/close_rest_costa_doro.jpg",
+    label: "Costa d'Oro Restaurant (4.7)",
+    desc: {
+      en: "Upscale restaurant with outstanding service, refined Mediterranean cuisine, and a beautiful seaside setting. Reviewers praise the high-quality ingredients, excellent dishes and elegant ambiance."
+    }
+  }
+];
+
+
+
+
+const CLOSE_BEACHES = [
+  {
+    img: "assets/close_beach_makris.jpg",
+    label: "Makris Gialos Beach",
+    desc: {
+      en: "A long, sandy and well-organized beach very close to Argostoli with easy access. It’s popular for its golden sand, clear water, and facilities like umbrellas, sunbeds and tavernas nearby. Great choice for families or anyone who wants a classic beach day."
+    }
+  },
+  {
+    img: "assets/close_beach_platis.jpg",
+    label: "Platis Gialos Beach",
+    desc: {
+      en: "Platis Gialos Beach is one of the most beautiful and popular beaches near Argostoli, located right next to Makris Gialos (about 5 minutes by car from the town center)."
+    }
+  },
+  {
+    img: "assets/close_beach_kalamia.jpg",
+    label: "Kalamia Beach",
+    desc: {
+      en: "Kalamia Beach is a small, beautiful cove located very close to the center of Argostoli, making it one of the most convenient beaches in the area."
+    }
+  }
+];
+
+
+
+function regionSightseensHTML(key){
+  const arr = REGION_SIGHTSEENS[key] || REGION_SIGHTSEENS.kefalonia || [];
+  const titleKey = (key==="lixouri") ? "titleSightseensLix" : (key==="argostoli") ? "titleSightseensArg" : "titleSightseensKef";
+  const title = t(titleKey);
+  const cards = arr.map((it, idx) => `
+    <div class="aboutCard animate-in" style="animation-delay:${idx*110}ms">
+      <div class="aboutImg">
+        <img src="${escapeHtml(it.img)}" loading="lazy" alt="${escapeHtml(pickLang(it.title))}">
+        <div class="label">${escapeHtml(pickLang(it.title))}</div>
+      </div>
+      <div class="aboutBody"><p>${escapeHtml(pickLang(it.desc))}</p></div>
+    </div>
+  `).join("");
+  return `
+    <div class="aboutWrap">
+      <div class="aboutHero"><h2 class="name" style="margin-top:0;">${escapeHtml(title)}</h2></div>
+      <div class="aboutGrid">${cards}</div>
+    </div>
+  `;
+}
+
+function regionRestaurantsHTML(key){
+  const arr = REGION_RESTAURANTS[key] || [];
+  const cards = arr.map((it, idx) => {
+    const extra = (it.location || it.servesKey) ? `
+      <p style="margin-top:10px;line-height:1.55">
+        ${it.location ? `• ${escapeHtml(t("locationLbl"))}: ${escapeHtml(it.location)}<br>` : ``}
+        ${it.servesKey ? `• ${escapeHtml(t("servesLbl"))}: ${escapeHtml(t(it.servesKey))}` : ``}
+      </p>` : ``;
+    return `
+      <div class="aboutCard animate-in" style="animation-delay:${idx*110}ms">
+        <div class="aboutImg"><img src="${escapeHtml(it.img)}" alt="${escapeHtml(it.label)}" loading="lazy"><div class="label">${escapeHtml(it.label)}</div></div>
+        <div class="aboutBody">
+          <p>${escapeHtml(pickLang(it.desc))}</p>
+          ${extra}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="aboutWrap">
+      <div class="aboutGrid">${cards}</div>
+    </div>
+  `;
+}
+
+function regionOtherBeachesHTML(){
+  const cards = OTHER_BEACHES.map((it, idx) => `
+    <div class="aboutCard animate-in" style="animation-delay:${idx*110}ms">
+      <div class="aboutImg">
+        <img src="assets/beach_${escapeHtml(it.id)}.jpg" alt="${escapeHtml(pickLang(it.title))}" loading="lazy" onerror="this.style.display='none'; this.closest('.aboutImg').classList.add('noimg')">
+        <div class="label">${escapeHtml(pickLang(it.title))}</div>
+      </div>
+      <div class="aboutBody"><p>${escapeHtml(pickLang(it.desc))}</p></div>
+    </div>
+  `).join("");
+
+  return `
+    <div class="aboutWrap">
+      <div class="aboutHero"><h2 class="name" style="margin-top:0;">${escapeHtml(t("titleFamousBeaches"))}</h2></div>
+      <div class="aboutGrid">${cards}</div>
+    </div>
+  `;
+}
+
+
+
+function renderAboutPage(){
+  const p = PAGES.about;
+  const kicker = p.title?.[currentLang] || p.title?.en || "ABOUT US";
+  const name = p.subtitle?.[currentLang] || p.subtitle?.en || "G Boutique Hotel Kefalonia";
+  const desc = p.desc?.[currentLang] || p.desc?.en || "";
+
+  pageCard.innerHTML = `
+    <div class="aboutWrap">
+      <div class="aboutHero">
+        <div class="kicker">${escapeHtml(kicker)}</div>
+        <h2 class="name">${escapeHtml(name)}</h2>
+        <p class="desc">${escapeHtml(desc).replaceAll("\\n","<br>")}</p>
+      </div>
+      <div class="aboutGrid" id="aboutGrid"></div>
+    </div>
+  `;
+
+  const grid = pageCard.querySelector("#aboutGrid");
+
+  ABOUT_CARDS.forEach((c, idx) => {
+    const title = c.title?.[currentLang] || c.title?.en || "";
+    const text  = c.text?.[currentLang]  || c.text?.en  || "";
+
+    const card = document.createElement("div");
+    card.className = "aboutCard";
+    card.style.animationDelay = (idx * 110) + "ms";
+
+    card.innerHTML = `
+      <div class="aboutImg">
+        <img src="${escapeHtml(c.img)}" alt="${escapeHtml(title)}" loading="lazy">
+        <div class="label">${escapeHtml(title)}</div>
+      </div>
+      <div class="aboutBody">
+        <p>${escapeHtml(text).replaceAll("\\n","<br>")}</p>
+      </div>
+    `;
+
+    const img = card.querySelector("img");
+    img.onerror = () => {
+      img.remove();
+      const box = card.querySelector(".aboutImg");
+      box.style.display = "flex";
+      box.style.alignItems = "center";
+      box.style.justifyContent = "center";
+      box.innerHTML = `<div style="padding:10px;text-align:center;color:rgba(255,255,255,.9);font-size:12px;">
+        Βάλε φωτογραφία στο <b>${escapeHtml(c.img)}</b>
+      </div>`;
+    };
+
+    grid.appendChild(card);
+  });
+
+  requestAnimationFrame(() => {
+    pageCard.querySelectorAll(".aboutCard").forEach(el => el.classList.add("animate-in"));
+  });
+}
+
+
+function renderTodoPage(){
+  const p = PAGES.todo;
+  const title = p.title?.[currentLang] || p.title?.en || "TO DO LIST";
+  pageTopTitle.textContent = title;
+  pageTopTitle.classList.remove("wrapTitleTabs");
+
+  const items = Array.isArray(p.items) ? p.items : [];
+  pageCard.innerHTML = `
+    <h2 style="margin:0 0 8px 0;font-size:18px;font-weight:800;letter-spacing:.2px;">${escapeHtml(title)}</h2>
+    <p style="margin:0;color:rgba(255,255,255,.82);line-height:1.6;font-size:14px;">${escapeHtml(p.text?.[currentLang] || p.text?.en || "")}</p>
+    <div class="todoList" id="todoList"></div>
+  `;
+  const list = pageCard.querySelector("#todoList");
+
+  const storeKey = "G Boutique Hotel Kefalonia_todo_checks_v1";
+  const saved = JSON.parse(localStorage.getItem(storeKey) || "{}");
+
+  items.forEach(it => {
+    const row = document.createElement("label");
+    row.className = "todoRow";
+    row.htmlFor = "todo_" + it.id;
+    row.innerHTML = `
+      <input type="checkbox" id="todo_${escapeHtml(it.id)}">
+      <div>
+        <b>${escapeHtml(it.title || "")}</b>
+        <p>${escapeHtml(it.desc || "")}</p>
+      </div>
+    `;
+    const cb = row.querySelector("input");
+    cb.checked = !!saved[it.id];
+    cb.addEventListener("change", () => {
+      saved[it.id] = cb.checked;
+      localStorage.setItem(storeKey, JSON.stringify(saved));
+    });
+    list.appendChild(row);
+  });
+}
+
+
+function renderClosePage(){
+  const p = PAGES.close;
+  const title = p.title?.[currentLang] || p.title?.en || "CLOSE TO US";
+
+  // Build compact tabs in the top title area
+  pageTopTitle.classList.add("wrapTitleTabs");
+  pageTopTitle.innerHTML = `
+    <span style="font-weight:800;letter-spacing:.2px;">${escapeHtml(title)}</span>
+    <span class="titleTabs" role="tablist" aria-label="Close to us sections">
+      <button class="tabPill active" role="tab" data-close-tab="restaurants">Restaurants</button>
+      <button class="tabPill" role="tab" data-close-tab="beaches">Beaches</button>
+    </span>
+  `;
+
+  // Restaurants cards (Close to us → Restaurants)
+  const restCards = (Array.isArray(CLOSE_RESTAURANTS) ? CLOSE_RESTAURANTS : []).map((it, idx) => `
+    <div class="aboutCard animate-in" style="animation-delay:${idx*110}ms">
+      <div class="aboutImg">
+        <img src="${escapeHtml(it.img)}" alt="${escapeHtml(it.label)}" loading="lazy"
+             onerror="this.style.display='none'; this.closest('.aboutImg').classList.add('noimg')">
+        <div class="label">${escapeHtml(it.label)}</div>
+      </div>
+      <div class="aboutBody"><p>${escapeHtml(pickLang(it.desc))}</p></div>
+    </div>
+  `).join("");
+
+  // Beaches cards (Close to us → Beaches)
+  const beachCards = (Array.isArray(CLOSE_BEACHES) ? CLOSE_BEACHES : []).map((it, idx) => `
+    <div class="aboutCard animate-in" style="animation-delay:${idx*110}ms">
+      <div class="aboutImg">
+        <img src="${escapeHtml(it.img)}" alt="${escapeHtml(it.label)}" loading="lazy"
+             onerror="this.style.display='none'; this.closest('.aboutImg').classList.add('noimg')">
+        <div class="label">${escapeHtml(it.label)}</div>
+      </div>
+      <div class="aboutBody"><p>${escapeHtml(pickLang(it.desc))}</p></div>
+    </div>
+  `).join("");
+
+  pageCard.innerHTML = `
+
+    <div id="closeTab_restaurants" style="display:none">
+      <div class="aboutWrap">
+        <div class="aboutGrid">${restCards}</div>
+      </div>
+    </div>
+
+    <div id="closeTab_beaches" style="display:none">
+      <div class="aboutWrap">
+        <div class="aboutGrid" id="closeBeachGrid">${beachCards}</div>
+      </div>
+    </div>
+  `;
+
+  // wire tabs
+  pageTopTitle.querySelectorAll("[data-close-tab]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const key = btn.dataset.closeTab;
+      pageTopTitle.querySelectorAll("[data-close-tab]").forEach(b=>b.classList.toggle("active", b===btn));
+      pageCard.querySelectorAll("[id^='closeTab_']").forEach(sec=>sec.style.display="none");
+      const sec = pageCard.querySelector("#closeTab_"+key);
+      if(sec) sec.style.display = "block";
+    });
+  });
+
+  requestAnimationFrame(() => {
+    pageCard.querySelectorAll(".aboutCard").forEach(el => el.classList.add("animate-in"));
+  });
+}
+
+function renderGenericPage(key){
+  const p = PAGES[key];
+  const title = p.title?.[currentLang] || p.title?.en || "Page";
+  const text  = p.text?.[currentLang]  || p.text?.en  || "";
+
+  const textHtml = escapeHtml(text).replaceAll("\n","<br>");
+
+  const photos = Array.isArray(p.photos) ? p.photos : [];
+  const isObjGallery = photos.length > 0 && typeof photos[0] === "object" && photos[0] && ("img" in photos[0]);
+
+  const isRegionPage = (key === "lixouri" || key === "argostoli" || key === "kefalonia");
+
+  if(isRegionPage){
+    // Region pages: content panels only (tabs are in the top bar)
+    pageCard.innerHTML = `
+      <div id="regionTab_sightseens">${regionSightseensHTML(key)}</div>
+      <div id="regionTab_restaurants" style="display:none">${regionRestaurantsHTML(key)}</div>
+      <div id="regionTab_otherbeaches" style="display:none">${regionOtherBeachesHTML()}</div>
+
+      ${((p.beaches && p.beaches.length) ? `
+        <div id="regionTab_beaches" style="display:none">
+          <div class="aboutWrap">
+            <div class="aboutHero">
+              <h2 class="name" style="margin-top:0;">${escapeHtml(key==="lixouri"?t("tabBeachesInLixouri"):(key==="argostoli"?t("tabBeachesNearArgostoli"):t("tabBeaches")))}</h2>
+            </div>
+            <div class="aboutGrid" id="beachGrid"></div>
+          </div>
+        </div>
+      ` : ``)}
+    `;
+
+    // Render Beaches gallery (p.beaches) into Beaches tab if present
+    const hasBeaches = !!(p && p.beaches && p.beaches.length);
+    if(hasBeaches){
+      const grid = pageCard.querySelector("#beachGrid");
+      if(grid){
+        p.beaches.forEach((item, idx) => {
+          const card = document.createElement("div");
+          card.className = "aboutCard";
+          card.style.animationDelay = (idx * 110) + "ms";
+
+          const cTitle = item.title || "";
+          const cText  = item.text  || "";
+          const cImg   = item.img   || "";
+
+          card.innerHTML = `
+            <div class="aboutImg">
+              <img src="${escapeHtml(cImg)}" alt="${escapeHtml(cTitle)}" loading="lazy">
+              <div class="label">${escapeHtml(cTitle)}</div>
+            </div>
+            <div class="aboutBody"><p>${escapeHtml(cText)}</p></div>
+          `;
+
+          grid.appendChild(card);
+        });
+
+        requestAnimationFrame(() => {
+          pageCard.querySelectorAll(".aboutCard").forEach(el => el.classList.add("animate-in"));
+        });
+      }
+    }
+
+    return;
+  }
+
+  // If photos is an array of objects {title, text, img}, render as cards (like the screenshot style)
+  if(isObjGallery){
+    pageCard.innerHTML = `
+      <div class="aboutWrap">
+        <div class="aboutHero">
+          <h2 class="name" style="margin-top:0;">${escapeHtml(text || title)}</h2>
+        </div>
+        <div class="aboutGrid" id="objGrid"></div>
+      </div>
+    `;
+
+    const grid = pageCard.querySelector("#objGrid");
+    if(!grid){
+      console.warn("objGrid not found. Skipping object-gallery render.");
+      return;
+    }
+    photos.forEach((item, idx) => {
+      const card = document.createElement("div");
+      card.className = "aboutCard";
+      card.style.animationDelay = (idx * 110) + "ms";
+      const cTitle = item.title || "";
+      const cText  = item.text  || "";
+      const cImg   = item.img   || "";
+      const isArticle = !!item.isArticle;
+      const goPage = item.go || "";
+
+      if(isArticle){
+        card.style.gridColumn = "1 / -1";
+        card.innerHTML = `
+          <div class="aboutImg" style="display:none;">
+            <img src="${escapeHtml(cImg)}" alt="${escapeHtml(cTitle)}" loading="lazy">
+            <div class="label">${escapeHtml(cTitle)}</div>
+          </div>
+          <div class="aboutBody">
+            ${cText}
+          </div>
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="aboutImg">
+            <img src="${escapeHtml(cImg)}" alt="${escapeHtml(cTitle)}" loading="lazy">
+            <div class="label">${escapeHtml(cTitle)}</div>
+          </div>
+          <div class="aboutBody">
+            <p>${escapeHtml(cText)}</p>
+          </div>
+        `;
+        if(goPage){
+          card.classList.add("clickablePhoto");
+          card.addEventListener("click", () => renderPage(goPage));
+        }
+      }
+
+      const img = card.querySelector("img");
+      if(img){
+        img.onerror = () => {
+          const box = card.querySelector(".aboutImg");
+          if(!box || box.style.display === "none") return;
+          img.remove();
+          box.style.display = "flex";
+          box.style.alignItems = "center";
+          box.style.justifyContent = "center";
+          box.innerHTML = `<div style="padding:10px;text-align:center;color:rgba(255,255,255,.9);font-size:12px;">
+            Βάλε φωτογραφία στο <b>${escapeHtml(cImg)}</b>
+          </div>`;
+        };
+      }
+
+      grid.appendChild(card);
+    });
+
+    requestAnimationFrame(() => {
+      pageCard.querySelectorAll(".aboutCard").forEach(el => el.classList.add("animate-in"));
+    });
+
+    return;
+  }
+
+  // Default simple text + image gallery (array of strings)
+  pageCard.innerHTML = `
+    <h2 style="margin:0 0 8px 0;font-size:18px;font-weight:800;letter-spacing:.2px;">${escapeHtml(title)}</h2>
+    <p style="margin:0;color:rgba(255,255,255,.82);line-height:1.6;font-size:14px;">${textHtml}</p>
+    <div class="gallery" id="gallery"></div>
+  `;
+
+  const gallery = pageCard.querySelector("#gallery");
+
+  if(photos.length === 0){
+    const ph = document.createElement("div");
+    ph.className = "photo";
+    ph.style.gridColumn = "1 / -1";
+    ph.textContent = I18N[currentLang]?.pageMissingPhotos || I18N.en.pageMissingPhotos;
+    gallery.appendChild(ph);
+  } else {
+    photos.forEach(src => {
+      const wrap = document.createElement("div");
+      wrap.className = "photo";
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = title;
+      img.loading = "lazy";
+      img.onerror = () => { wrap.textContent = src; };
+      wrap.appendChild(img);
+      gallery.appendChild(wrap);
+    });
+  }
+}
+
+function renderPage(key){
+  currentPageKey = key;
+  const p = PAGES[key];
+  if(!p) return;
+
+  const title = p.title?.[currentLang] || p.title?.en || "Page";
+
+  // Tabs on top for specific pages (Lixouri / Argostoli / Kefalonia)
+  const needsTopTabs = (key === "lixouri" || key === "argostoli" || key === "kefalonia");
+
+  pageTopTitle.classList.toggle("wrapTitleTabs", needsTopTabs);
+
+  if(needsTopTabs){
+    pageTopTitle.innerHTML = `
+      <span style="font-weight:800;letter-spacing:.2px;">${escapeHtml(title)}</span>
+      <span class="titleTabs" role="tablist" aria-label="Sections">
+        <button class="tabPill active" role="tab" data-local-tab="sightseens">${escapeHtml(t("tabSightseens"))}</button>
+        <button class="tabPill" role="tab" data-local-tab="restaurants">${escapeHtml(t("tabRestaurants"))}</button>
+        ${key === "lixouri" ? `<button class="tabPill" role="tab" data-local-tab="beaches">${escapeHtml(t("tabBeachesInLixouri"))}</button>` : ``}
+        ${key === "argostoli" ? `<button class="tabPill" role="tab" data-local-tab="beaches">${escapeHtml(t("tabBeachesNearArgostoli"))}</button>` : ``}
+        ${key === "kefalonia" ? `<button class="tabPill" role="tab" data-local-tab="otherbeaches">${escapeHtml(t("tabOtherBeaches"))}</button>` : ``}
+        ${((key !== "lixouri" && key !== "argostoli" && PAGES[key] && PAGES[key].beaches && PAGES[key].beaches.length) ? `<button class="tabPill" role="tab" data-local-tab="beaches">${escapeHtml(t("tabBeaches"))}</button>` : ``)}
+      </span>
+    `;
+  } else {
+    pageTopTitle.textContent = title;
+  }
+
+  if(key === "about") renderAboutPage();
+  else if(key === "close") renderClosePage();
+  else if(key === "todo") renderTodoPage();
+  else renderGenericPage(key);
+}
+
+function openPage(key){
+  renderPage(key);
+  show("page");
+}
+
+/* Events */
+document.getElementById("welcomeBtn").addEventListener("click", () => show("home"));
+document.getElementById("backBtn").addEventListener("click", () => show("home"));
+
+document.querySelectorAll(".menuItem[data-go]").forEach(item => {
+  item.addEventListener("click", () => openPage(item.dataset.go));
+});
+
+/* Init */
+(function init(){
+  // English-only
+  currentLang = "en";
+  document.documentElement.lang = "en";
+  const dict = I18N.en;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if(dict[key]) el.textContent = dict[key];
+  });
+})();
+
+// local tabs (Sightseens / Restaurants / Beaches) for region pages
+document.addEventListener("click", (e)=>{
+  const btn = e.target.closest("[data-local-tab]");
+  if(!btn) return;
+
+  const wrap = btn.closest(".titleTabs") || btn.parentElement;
+  if(!wrap) return;
+
+  // toggle active class
+  wrap.querySelectorAll("[data-local-tab]").forEach(b=>b.classList.toggle("active", b===btn));
+
+  // switch content if the region tab sections exist
+  const key = btn.dataset.localTab;
+  const sections = pageCard?.querySelectorAll?.("[id^='regionTab_']");
+  if(sections && sections.length){
+    sections.forEach(sec => sec.style.display = "none");
+    const target = pageCard.querySelector("#regionTab_" + key);
+    if(target) target.style.display = "block";
+  }
+});
+
+
+
+/* ===== Photo links (auto-generated from Photo Links.txt) ===== */
+
+/* ====== Asset robustness (no broken images) ======
+   This app can run as a single standalone HTML file.
+   If an image in assets/ is missing, we replace it with a clean inline placeholder.
+*/
+const __PLACEHOLDER_SVG = (labelText="Image") => {
+  const safe = String(labelText || "Image").slice(0, 40).replace(/[<>&"]/g, "");
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+          <stop offset="1" stop-color="#000000" stop-opacity="0.10"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="700" rx="42" fill="url(#g)"/>
+      <rect x="40" y="40" width="1120" height="620" rx="34" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="6"/>
+      <g fill="#ffffff" fill-opacity="0.88" font-family="Manrope, system-ui, sans-serif" text-anchor="middle">
+        <text x="600" y="340" font-size="46" font-weight="800">${safe}</text>
+        <text x="600" y="395" font-size="24" font-weight="600" fill-opacity="0.75">Add the correct file in assets/ to replace this</text>
+      </g>
+    </svg>
+  `.trim();
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+};
+
+// Replace broken <img> sources everywhere (captures early too)
+
+document.addEventListener("error", (ev) => {
+  const el = ev.target;
+  if(!(el instanceof HTMLImageElement)) return;
+
+  // If we have a dedicated fallback (e.g., prefer PNG when available, else inline SVG), use it first.
+  const fb = el.getAttribute("data-fallback-src");
+  if(fb && el.getAttribute("src") !== fb){
+    el.dataset.fallbackApplied = "1";
+    el.setAttribute("src", fb);
+    return;
+  }
+
+  if(el.dataset.fallbackApplied === "1") return;
+  el.dataset.fallbackApplied = "1";
+
+  const alt = el.getAttribute("alt") || __basenameFromSrc(el.getAttribute("src") || "") || "Image missing";
+  el.classList.remove("clickablePhoto");
+  el.removeAttribute("role");
+  el.removeAttribute("tabindex");
+  el.setAttribute("src", __PLACEHOLDER_SVG(alt));
+}, true);
+const PHOTO_LINKS = {
+  "about_apartment1.jpg": "",
+  "about_apartment2.jpg": "",
+  "about_studio1.jpg": "",
+  "about_studio2.jpg": "",
+  "antisamos.jpg": "https://www.google.com/search?q=Antisamos+beasch+kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6gSh5BvUkmu3l5l0kjN8hF8TUaMQ%3A1770753308268&ei=HI2LaZyJEISmi-gPqO_HkQk&ved=0ahUKEwich7KP2s-SAxUE0wIHHaj3MZIQ4dUDCBE&uact=5&oq=Antisamos+beasch+kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiGkFudGlzYW1vcyBiZWFzY2gga2VmYWxvbmlhMgkQLhiABBgTGA0yCRAAGIAEGBMYDTIJEAAYgAQYExgNMggQABgTGBYYHjIIEAAYExgWGB4yCBAAGBMYFhgeMggQABgTGBYYHjIIEAAYExgWGB4yCBAAGBMYFhgeMggQABgTGBYYHjIYEC4YgAQYExgNGJcFGNwEGN4EGN8E2AEBSJchUM8DWPIfcAF4AZABAJgBvQOgAZYYqgEKMC4xMy4yLjAuMbgBA8gBAPgBAZgCEaAC5hjCAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBcICExAuGIAEGLADGEMYyAMYigXYAQHCAgUQLhiABMICCxAuGIAEGMcBGK8BwgICECbCAgQQABgewgIUEC4YgAQYlwUY3AQY3gQY3wTYAQHCAgYQABgWGB7CAgcQLhiABBgNwgINEC4YgAQYxwEYDRivAcICBhAAGA0YHsICFhAuGIAEGA0YlwUY3AQY3gQY3wTYAQHCAhwQLhiABBjHARgNGK8BGJcFGNwEGN4EGOAE2AEBwgIIEAAYExgNGB7CAgoQABgTGAUYDRgewgIHECEYoAEYCsICBBAhGBWYAwCIBgGQBhS6BgYIARABGAiSBwoxLjEzLjIuMC4xoAfE3QGyBwowLjEzLjIuMC4xuAfgGMIHBjEuMi4xNMgHNoAIAA&sclient=gws-wiz-serp",
+  "argo_rest_alati.jpg": "https://www.google.com/search?q=Alati+restaurant+alaties&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n4I4oNVD4vAikbXMy_3OoowTv41ww%3A1770753457911&ei=sY2LafitN9PGi-gPxLityAU&ved=0ahUKEwi4yt_W2s-SAxVT4wIHHURcC1kQ4dUDCBE&uact=5&oq=Alati+restaurant+alaties&gs_lp=Egxnd3Mtd2l6LXNlcnAiGEFsYXRpIHJlc3RhdXJhbnQgYWxhdGllczIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCkibKlDFBlijKXADeAGQAQCYAZ0CoAHzH6oBBjAuMjAuM7gBA8gBAPgBAZgCGqAC1CDCAgoQABiwAxjWBBhHwgIKEC4YgAQYQxiKBcICERAuGIAEGLEDGNEDGIMBGMcBwgIOEC4YgAQYsQMY0QMYxwHCAggQABiABBixA8ICCxAAGIAEGLEDGIMBwgIZEC4YgAQYQxiKBRiXBRjcBBjeBBjgBNgBAcICExAuGIAEGEMYxwEYigUYjgUYrwHCAhYQLhiABBixAxjRAxhDGIMBGMcBGIoFwgIQEC4YgAQYQxjHARiKBRivAcICERAuGIAEGLEDGIMBGMcBGK8BwgIiEC4YgAQYQxjHARiKBRiOBRivARiXBRjcBBjeBBjgBNgBAcICBRAAGIAEwgILEC4YgAQYxwEYrwHCAggQLhiABBixA8ICBRAuGIAEwgIHEAAYgAQYCsICDRAuGIAEGNEDGMcBGArCAgkQABiABBgKGAvCAgkQLhiABBgKGAvCAgYQABgWGB7CAhoQLhiABBjHARivARiXBRjcBBjeBBjgBNgBAcICCBAAGBYYChgewgIIEAAYgAQYogTCAgUQABjvBZgDAIgGAZAGCLoGBggBEAEYFJIHBjMuMTkuNKAHmdwCsgcGMC4xOS40uAfLIMIHBjEuMTguN8gHRYAIAA&sclient=gws-wiz-serp",
+  "argo_rest_alexandros.jpg": "https://www.google.com/search?sca_esv=3ef4ee282b12278c&sxsrf=ANbL-n7hTCGqdVnqTyzYT-7Tm_OXA6jH9A:1770753504710&q=Restaurant+Alexandros+myrtos+Kefalonia&sa=X&ved=2ahUKEwiK6Ift2s-SAxWA2AIHHUE2JS0Q7xYoAHoECBUQAQ&biw=1536&bih=756&dpr=1.25",
+  "argo_rest_ammos.jpg": "https://www.google.com/search?q=Restaurant+Ammos+Kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n7O-aYsZkSdGMJoIJRPhcINqQjIHQ%3A1770753484018&ei=zI2LaaNtwJ-L6A_lhvfRDw&ved=0ahUKEwijg5nj2s-SAxXAzwIHHWXDPfoQ4dUDCBE&uact=5&oq=Restaurant+Ammos+Kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiGlJlc3RhdXJhbnQgQW1tb3MgS2VmYWxvbmlhMgUQABiABDIFEAAYgAQyChAAGIAEGEMYigUyChAAGIAEGEMYigUyBRAAGIAEMgUQABiABDIFEAAYgAQyChAAGIAEGEMYigUyBRAAGIAEMgUQABiABEjdD1CcBFiQDnABeAGQAQCYAZUGoAGVBqoBAzYtMbgBA8gBAPgBAZgCAqACnAbCAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBZgDAIgGAZAGCZIHBTEuNS0xoAfkBbIHAzUtMbgHmAbCBwUwLjEuMcgHBYAIAA&sclient=gws-wiz-serp",
+  "argo_rest_arxontiko.jpg": "https://www.google.com/search?q=arxontiko+&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n7bHIoO2zYMdLInGZjoRENVbTGQ2A%3A1770753402141&ei=eo2LaaalCMzsi-gPveuOiQE&ved=0ahUKEwimypO82s-SAxVM9gIHHb21IxEQ4dUDCBE&uact=5&oq=arxontiko+&gs_lp=Egxnd3Mtd2l6LXNlcnAiCmFyeG9udGlrbyAyCxAuGIAEGMcBGK8BMg0QLhiABBjHARgKGK8BMg0QLhiABBjHARgKGK8BMgUQABiABDILEC4YgAQYxwEYrwEyBRAAGIAEMgcQABiABBgKMg0QLhiABBjHARgKGK8BMgUQABiABDIHEAAYgAQYCjIaEC4YgAQYxwEYrwEYlwUY3AQY3gQY4ATYAQFItg5Q8ANYjgpwA3gBkAEAmAHmAaABmQOqAQUwLjEuMbgBA8gBAPgBAvgBAZgCBaACrAPCAgoQABiwAxjWBBhHmAMAiAYBkAYIugYGCAEQARgUkgcFMy4xLjGgB9EssgcFMC4xLjG4B6MDwgcFMC4zLjLIBw6ACAA&sclient=gws-wiz-serp",
+  "argo_rest_olea.jpg": "https://www.google.com/search?q=Restaurant+Olea+Argostoli+myrtos+Kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n72oXfvBLamO7iWjZmGKRUs0-IRZw%3A1770753506578&ei=4o2LaeqFI4eqi-gPvoekoQo&ved=0ahUKEwjq_vnt2s-SAxUH1QIHHb4DKaQQ4dUDCBE&uact=5&oq=Restaurant+Olea+Argostoli+myrtos+Kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiKlJlc3RhdXJhbnQgT2xlYSBBcmdvc3RvbGkgbXlydG9zIEtlZmFsb25pYTIFEAAY7wUyBRAAGO8FMggQABiABBiiBDIFEAAY7wUyCBAAGIAEGKIESKIcUJ8GWIEacAJ4AZABAJgByQGgAfASqgEGMC4xNC4xuAEDyAEA-AEBmAIKoALtCcICChAAGLADGNYEGEfCAgYQABgNGB7CAggQABiiBBiJBcICChAhGKABGMMEGAqYAwCIBgGQBgiSBwMyLjigB5VBsgcDMC44uAfmCcIHAzEuOcgHD4AIAA&sclient=gws-wiz-serp",
+  "argo_rest_palia_plaka.jpg": "https://www.google.com/search?q=Palia+pLaka&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n4lzJxg6GBaozrUgGYRp2KIa4uEPg%3A1770753415687&ei=h42LaaLCKf6Li-gP3qPA0A8&ved=0ahUKEwjioc7C2s-SAxX-xQIHHd4REPoQ4dUDCBE&uact=5&oq=Palia+pLaka&gs_lp=Egxnd3Mtd2l6LXNlcnAiC1BhbGlhIHBMYWthMhQQLhiABBjHARgKGCoYCxiOBRivATIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAAGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAAGIAEGAoYCzIjEC4YgAQYxwEYChgqGAsYjgUYrwEYlwUY3AQY3gQY4ATYAQJIghdQzwdYuxNwA3gBkAEAmAHWAaABzA2qAQYwLjEwLjG4AQPIAQD4AQGYAg6gAoYOwgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAhMQLhiABBiwAxhDGMgDGIoF2AEBwgIZEC4YgAQYsAMYQxjHARjIAxiKBRivAdgBAcICCBAAGIAEGLEDwgIOEC4YgAQYsQMY0QMYxwHCAgsQABiABBixAxiDAcICBRAAGIAEwgIIEC4YgAQYsQPCAg4QABiABBixAxiDARiKBcICCxAuGIAEGNEDGMcBwgIOEC4YgAQYsQMYgwEYigXCAhEQLhiABBixAxjRAxiDARjHAcICCxAuGIAEGMcBGK8BwgISEC4YgAQYsQMY0QMYxwEYChgLwgIHEC4YgAQYCsICIRAuGIAEGLEDGNEDGMcBGAoYCxiXBRjcBBjeBBjgBNgBAsICGhAuGIAEGMcBGK8BGJcFGNwEGN4EGOAE2AECwgIFEC4YgATCAg4QLhiABBjHARiOBRivAcICEhAuGIAEGMcBGAoYKhiOBRivAcICBxAAGIAEGArCAggQABgWGAoYHsICBhAAGBYYHsICIRAuGIAEGMcBGAoYKhiOBRivARiXBRjcBBjeBBjgBNgBApgDAIgGAZAGC7oGBAgBGAi6BgYIAhABGBSSBwYzLjEwLjGgB96WAbIHBjAuMTAuMbgH-g3CBwYwLjQuMTDIByuACAA&sclient=gws-wiz-serp",
+  "argo_rest_sepia.jpg": "https://www.google.com/search?q=Sepia+Argostoli&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6G4C5tTFwUdhf5rFlDo8yvn1Im9w%3A1770753446608&ei=po2LabHxJP3ui-gPyqbNgAE&ved=0ahUKEwix3K3R2s-SAxV99wIHHUpTExAQ4dUDCBE&uact=5&oq=Sepia+Argostoli&gs_lp=Egxnd3Mtd2l6LXNlcnAiD1NlcGlhIEFyZ29zdG9saTIQEC4YgAQYExjHARiOBRivATIIEAAYExgWGB4yCBAAGBMYFhgeMggQABgTGBYYHjICECYyCBAAGIAEGKIEMggQABiABBiiBDIIEAAYogQYiQUyHxAuGIAEGBMYxwEYjgUYrwEYlwUY3AQY3gQY4ATYAQFI_h9QrgZYrR5wA3gBkAEAmAGmAqABoBaqAQYwLjExLjS4AQPIAQD4AQGYAhKgAuUWwgIKEAAYsAMY1gQYR8ICChAAGIAEGEMYigXCAgoQLhiABBhDGIoFwgIOEC4YgAQYsQMY0QMYxwHCAgsQABiABBixAxiDAcICCBAAGIAEGLEDwgILEC4YgAQY0QMYxwHCAhMQLhiABBhDGMcBGIoFGI4FGK8BwgILEC4YgAQYsQMYgwHCAgsQLhiABBjHARivAcICBRAAGIAEwgIOEC4YgAQYsQMYgwEYigXCAiIQLhiABBhDGMcBGIoFGI4FGK8BGJcFGNwEGN4EGOAE2AEBwgILEAAYgAQYsQMYyQPCAg4QLhiABBiSAxjHARivAcICCxAAGIAEGJIDGIoFwgIFEC4YgATCAgYQABgWGB7CAggQABgWGAoYHpgDAOIDBRIBMSBAiAYBkAYIugYGCAEQARgUkgcGMy4xMS40oAfe7AGyBwYwLjExLjS4B9sWwgcGMC4xMS43yAczgAgA&sclient=gws-wiz-serp",
+  "argo_rest_spyros.jpg": "https://www.google.com/search?q=Spyros+Argsotoli&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6x1C8rKOb7SURZRI6aEMXT7nDoSw%3A1770753426231&ei=ko2LacvpDYTni-gP37OzkAk&ved=0ahUKEwjL-tHH2s-SAxWE8wIHHd_ZDJIQ4dUDCBE&uact=5&oq=Spyros+Argsotoli&gs_lp=Egxnd3Mtd2l6LXNlcnAiEFNweXJvcyBBcmdzb3RvbGkyBxAAGIAEGA0yChAAGAUYChgNGB4yCBAAGAgYDRgeMggQABgIGA0YHjIIEAAYCBgNGB4yCBAAGAgYDRgeMggQABiABBiiBDIIEAAYgAQYogQyCBAAGIAEGKIEMggQABiABBiiBEjBOFC6BVjyNnADeAGQAQCYAdsBoAGJFqoBBjAuMTQuMrgBA8gBAPgBAZgCE6AC1hbCAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBcICGRAuGIAEGLADGEMYxwEYyAMYigUYrwHYAQHCAhwQLhiABBiwAxhDGMcBGMgDGIoFGI4FGK8B2AEBwgIOEC4YgAQYsQMY0QMYxwHCAgsQABiABBixAxiDAcICCBAAGIAEGLEDwgILEC4YgAQY0QMYxwHCAh0QLhiABBixAxjRAxjHARiXBRjcBBjeBBjgBNgBAsICChAuGIAEGEMYigXCAgsQLhiABBjHARivAcICGRAuGIAEGEMYigUYlwUY3AQY3gQY4ATYAQLCAgsQLhiABBixAxiDAcICBRAAGIAEwgIIEC4YgAQYsQPCAgUQLhiABMICGhAuGIAEGLEDGIMBGJcFGNwEGN4EGOAE2AECwgIaEC4YgAQYxwEYrwEYlwUY3AQY3gQY4ATYAQLCAg8QLhiABBjHARgKGAsYrwHCAgkQABiABBgKGAvCAgkQLhiABBgKGAvCAggQABgWGAoYHsICBhAAGBYYHsICBRAhGKABwgIGEAAYDRgewgIIEAAYBRgNGB7CAgoQABgIGAoYDRgemAMAiAYBkAYMugYECAEYCLoGBggCEAEYFJIHBjMuMTQuMqAHuuEBsgcGMC4xNC4yuAfJFsIHBjEuNy4xMcgHNoAIAA&sclient=gws-wiz-serp",
+  "argostoli_beach_gradakia.jpg": "https://www.google.com/search?q=gradakia+beach&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5M1PRrB-GmmSOZ9hmqXrELw1Qndg%3A1770752685561&ei=rYqLaeX5IfeLxc8P6OHkiA0&ved=0ahUKEwilhLvm18-SAxX3RfEDHegwGdEQ4dUDCBE&uact=5&oq=gradakia+beach&gs_lp=Egxnd3Mtd2l6LXNlcnAiDmdyYWRha2lhIGJlYWNoMgsQLhiABBjHARivATIFEAAYgAQyChAAGIAEGEMYigUyBRAAGIAEMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMhoQLhiABBjHARivARiXBRjcBBjeBBjgBNgBAkiUJFCECViPInAEeAGQAQCYAa0BoAHuD6oBBDAuMTW4AQPIAQD4AQGYAhOgAsoQwgIKEAAYsAMY1gQYR8ICExAuGIAEGLADGEMYyAMYigXYAQHCAg0QABiABBixAxhDGIoFwgILEAAYgAQYsQMYgwHCAhAQABiABBixAxhDGIMBGIoFwgIWEC4YgAQYsQMY0QMYQxiDARjHARiKBcICCxAuGIAEGLEDGIMBwgIIEAAYgAQYsQPCAg0QLhiABBixAxhDGIoFwgIREC4YgAQYxwEYmAUYmQUYrwHCAhoQLhiABBixAxiDARjHARiYBRiaBRieBRivAcICHBAuGIAEGLEDGEMYigUYlwUY3AQY3gQY4ATYAQLCAhYQLhiABBhDGMcBGJgFGJkFGIoFGK8BwgIUEC4YgAQYsQMYxwEYmAUYmQUYrwHCAgoQLhiABBhDGIoFwgIOEC4YgAQYsQMYgwEYyQPCAgsQABiABBiSAxiKBcICJRAuGIAEGEMYxwEYmAUYmQUYigUYrwEYlwUY3AQY3gQY4ATYAQLCAg4QLhiABBixAxjHARivAcICHRAuGIAEGLEDGMcBGK8BGJcFGNwEGN4EGOAE2AECwgINEC4YgAQYxwEYChivAcICBRAuGIAEwgICECbCAgQQABgewgINEC4YgAQYxwEYDRivAcICBxAAGIAEGA3CAgYQABgNGB7CAhwQLhiABBjHARgNGK8BGJcFGNwEGN4EGOAE2AECmAMA4gMFEgExIECIBgGQBgy6BgQIARgIugYGCAIQARgUkgcENC4xNaAHx7kBsgcEMC4xNbgHthDCBwYwLjEuMTjIB0WACAA&sclient=gws-wiz-serp",
+  "argostoli_beach_kalamia.jpg": "https://www.google.com/search?q=kalamia+beach+lassibeach&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6nrtZPY9dziMfEWkPQD8_amwBevg%3A1770752701947&ei=vYqLafa9OdSF7NYP74-HCA&ved=0ahUKEwi2kKPu18-SAxXUAtsEHe_HAQEQ4dUDCBE&uact=5&oq=kalamia+beach+lassibeach&gs_lp=Egxnd3Mtd2l6LXNlcnAiGGthbGFtaWEgYmVhY2ggbGFzc2liZWFjaDIIEAAYogQYiQUyCBAAGIAEGKIEMggQABiiBBiJBTIIEAAYgAQYogQyCBAAGKIEGIkFSNkxUPEKWPkvcAJ4AZABAJgBrAGgAYITqgEEMC4xObgBA8gBAPgBAZgCEqACwRDCAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBcICExAuGIAEGLADGEMYyAMYigXYAQHCAhkQLhiABBiwAxhDGMcBGMgDGIoFGK8B2AEBwgIGEAAYBxgewgIIEAAYExgHGB7CAggQABgHGAoYHsICDxAuGIAEGMcBGAoYCxivAcICCxAuGIAEGMcBGK8BwgIHEAAYgAQYCsICCRAAGIAEGAoYC8ICBRAAGIAEwgINEC4YgAQYxwEYDRivAcICBxAAGIAEGA3CAgcQLhiABBgNwgIIEAAYBxgIGB7CAhwQLhiABBjHARgNGK8BGJcFGNwEGN4EGOAE2AEBwgIGEAAYDRgewgIEECEYCpgDAIgGAZAGEboGBggBEAEYCJIHBDIuMTagB8CDAbIHBDAuMTa4B7cQwgcGMS4xMS42yActgAgA&sclient=gws-wiz-serp",
+  "argostoli_beach_makris_gialos.jpg": "https://www.google.com/search?q=makris+gialos+kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6FlTQteRtyOIA83w0PKv_evqvEQg%3A1770752625738&ei=cYqLaerZLMmI7NYP07Dd8QI&ved=0ahUKEwiq1vfJ18-SAxVJBNsEHVNYNy4Q4dUDCBE&uact=5&oq=makris+gialos+kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiF21ha3JpcyBnaWFsb3Mga2VmYWxvbmlhMgUQLhiABDICECYyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMhQQLhiABBiXBRjcBBjeBBjfBNgBAUjrEVCaA1i-EHABeAGQAQCYAbgBoAHzCqoBBDAuMTC4AQPIAQD4AQGYAgugAqoLwgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAhMQLhiABBiwAxhDGMgDGIoF2AEBwgIFEAAYgATCAgoQABiABBhDGIoFwgIIEAAYFhgKGB6YAwCIBgGQBhS6BgYIARABGAiSBwQxLjEwoAe5igGyBwQwLjEwuAekC8IHBDItMTHIByuACAA&sclient=gws-wiz-serp",
+  "argostoli_beach_platis_gialos.jpg": "https://www.google.com/search?q=platigialos+kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5NzieBXjtRdoTNa9xHIpZSEsbdjw%3A1770752630362&ei=doqLae7qFefkxc8PtNC9sQU&ved=0ahUKEwju_ZHM18-SAxVncvEDHTRoL1YQ4dUDCBE&uact=5&oq=platigialos+kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiFXBsYXRpZ2lhbG9zIGtlZmFsb25pYTIGEAAYBxgeMgYQABgHGB4yBhAAGAcYHjIGEAAYBxgeMggQABgHGAgYHjIIEAAYBxgIGB4yCBAAGAcYCBgeMggQABgHGAgYHjIIEAAYBxgIGB4yCBAAGAcYCBgeSMAPUIAIWIwNcAJ4AJABAJgBowGgAfoFqgEDMC42uAEDyAEA-AEBmAIGoAKPBMICChAAGLADGNYEGEfCAhMQLhiABBiwAxhDGMgDGIoF2AEBmAMAiAYBkAYLugYECAEYCJIHAzIuNKAHpj-yBwMwLjS4B4UEwgcHMC4zLjIuMcgHHoAIAA&sclient=gws-wiz-serp",
+  "argostoli_botanical.jpg": "https://www.google.com/search?q=argostoli+botanical+&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6IvQ6CpWE_zMthiRP5wQ6A0eONow%3A1770752762647&ei=-oqLaeGSJ_moxc8PyKSfoQo&ved=0ahUKEwjh95uL2M-SAxV5VPEDHUjSJ6QQ4dUDCBE&uact=5&oq=argostoli+botanical+&gs_lp=Egxnd3Mtd2l6LXNlcnAiFGFyZ29zdG9saSBib3RhbmljYWwgMgYQABgWGB4yBRAAGO8FMggQABiiBBiJBTIFEAAY7wUyBRAAGO8FMgUQABjvBUjIKlCaBFiiJnABeAGQAQGYAdgBoAG7FKoBBjAuMjAuMbgBA8gBAPgBAZgCD6ACkQ7CAgoQABiwAxjWBBhHwgIHECEYoAEYCsICBRAAGIAEwgIFEC4YgATCAgIQJsICCBAAGBYYChgewgILEC4YgAQYxwEYrwHCAgcQABiABBgKwgIREC4YgAQYxwEYmAUYmQUYrwHCAhoQLhiABBjHARivARiXBRjcBBjeBBjgBNgBAcICDhAuGIAEGMcBGJgFGK8BwgIdEC4YgAQYxwEYmAUYrwEYlwUY3AQY3gQY4ATYAQHCAgcQABiABBgNwgIGEAAYDRgewgINEC4YgAQYExjHARivAcICCBAAGBMYFhgewgIIEAAYgAQYogTCAhwQLhiABBgTGMcBGK8BGJcFGNwEGN4EGOAE2AEBmAMAiAYBkAYIugYGCAEQARgUkgcEMS4xNKAHoJQBsgcEMC4xNLgHjg7CBwYwLjExLjTIBySACAA&sclient=gws-wiz-serp",
+  "argostoli_bridge.jpg": "https://www.google.com/search?sca_esv=3ef4ee282b12278c&sxsrf=ANbL-n65aX191hvYuMM50s292sZG-PkSjA:1770752745356&q=De+bosset+bridge+%CE%B1%CF%81%CE%B3%CE%BF%CF%83%CF%84%CE%BF%CE%BB%CE%B9&spell=1&sa=X&ved=2ahUKEwiky_yC2M-SAxXRS_EDHcP1CrsQBSgAegQIDRAB&biw=1536&bih=756&dpr=1.25",
+  "argostoli_lagoon.jpg": "https://www.google.com/search?q=argostoli+lagoon&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n60cBPUiiCYenYyRSssqSWxsfl5BA%3A1770752783126&ei=D4uLaai2B9WFxc8P3s3BmQI&ved=0ahUKEwjo-f2U2M-SAxXVQvEDHd5mMCMQ4dUDCBE&uact=5&oq=argostoli+lagoon&gs_lp=Egxnd3Mtd2l6LXNlcnAiEGFyZ29zdG9saSBsYWdvb24yBxAuGIAEGBMyCBAAGBMYFhgeMggQABgTGBYYHjIIEAAYExgWGB4yCBAAGBMYFhgeMgoQABgTGBYYChgeMgIQJjICECYyBRAAGO8FMggQABiiBBiJBTIWEC4YgAQYExiXBRjcBBjeBBjgBNgBAUjeFVC7CVjbE3ACeAGQAQCYAZcBoAGJBqoBAzAuNrgBA8gBAPgBAZgCCKACqgbCAgoQABiwAxjWBBhHwgIFEAAYgATCAgUQLhiABMICCBAAGBYYChgewgIGEAAYFhgewgIJEC4YgAQYExgNwgIKEAAYExgIGA0YHsICGBAuGIAEGBMYDRiXBRjcBBjeBBjgBNgBAZgDAIgGAZAGCLoGBggBEAEYFJIHAzIuNqAH_jCyBwMwLja4B6EGwgcFMC40LjTIBxeACAA&sclient=gws-wiz-serp",
+  "argostoli_library.jpg": "https://www.google.com/search?q=argostoli+library&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5JPk5RXRvaSEe8ALS4uT5xItpc5w%3A1770752794189&ei=GouLadKaC7jUxc8P5LSu8QM&ved=0ahUKEwjSj6Ga2M-SAxU4avEDHWSaKz4Q4dUDCBE&uact=5&oq=argostoli+library&gs_lp=Egxnd3Mtd2l6LXNlcnAiEWFyZ29zdG9saSBsaWJyYXJ5MggQABgWGAoYHjIGEAAYFhgeMgYQABgWGB4yCBAAGKIEGIkFMggQABiiBBiJBTIIEAAYgAQYogQyCBAAGIAEGKIEMgUQABjvBUiWE1D4B1iVEXACeAGQAQCYAdMBoAGtCKoBBTAuNi4xuAEDyAEA-AEBmAIJoALRCMICChAAGLADGNYEGEfCAgUQABiABMICBRAuGIAEwgICECaYAwCIBgGQBgiSBwUyLjYuMaAHtS-yBwUwLjYuMbgHywjCBwUwLjYuM8gHGIAIAA&sclient=gws-wiz-serp",
+  "argostoli_lighthouse.jpg": "https://www.google.com/search?q=argostoli+light+house&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n7JxdQ4H9roVkE7lhfO9e4WROkOEg%3A1770752746829&ei=6oqLafCbMouTxc8PlMjv-Qg&ved=0ahUKEwjwuNaD2M-SAxWLSfEDHRTkO48Q4dUDCBE&uact=5&oq=argostoli+light+house&gs_lp=Egxnd3Mtd2l6LXNlcnAiFWFyZ29zdG9saSBsaWdodCBob3VzZTIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCjIEECEYFUiVIlC3B1igIXADeAGQAQGYAbsCoAH4F6oBCDAuMTcuMi4xuAEDyAEA-AEBmAIWoALEF8ICChAAGLADGNYEGEfCAhEQLhiABBixAxjRAxiDARjHAcICChAuGIAEGEMYigXCAg4QLhiABBixAxjRAxjHAcICCBAAGIAEGLEDwgILEAAYgAQYsQMYgwHCAiAQLhiABBixAxjRAxiDARjHARiXBRjcBBjeBBjgBNgBAcICCBAuGIAEGLEDwgIFEAAYgATCAgoQABiABBhDGIoFwgIZEC4YgAQYQxiKBRiXBRjcBBjeBBjgBNgBAcICBRAuGIAEwgISEC4YgAQYsQMY0QMYxwEYChgLwgIQEC4YgAQYsQMYQxiDARiKBcICDRAuGIAEGLEDGEMYigXCAgsQLhiABBjHARivAcICBxAAGIAEGArCAhEQLhiABBjHARiYBRiZBRivAcICFBAuGIAEGJcFGNwEGN4EGOAE2AEBwgIaEC4YgAQYxwEYrwEYlwUY3AQY3gQY4ATYAQHCAgIQJsICCBAAGBYYChgewgIGEAAYFhgewgIFEAAY7wXCAggQABiiBBiJBcICCBAAGIAEGKIEwgIFECEYnwXCAgUQIRigAZgDAIgGAZAGCLoGBggBEAEYFJIHCDMuMTYuMi4xoAex_AGyBwgwLjE2LjIuMbgHuhfCBwcwLjEyLjEwyAc8gAgA&sclient=gws-wiz-serp",
+  "close_map.jpg": "",
+  "close_rest_captain_nikolas.jpg": "https://www.google.com/search?q=Restaurant+Captain+Nikolas+kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6DbsxrpYBXgFFpdjnUnGLsZcXVvg%3A1770753554620&ei=Eo6LabDJJcqK-d8Po8SDuAs&ved=0ahUKEwiwmu6E28-SAxVKRf4FHSPiALcQ4dUDCBE&uact=5&oq=Restaurant+Captain+Nikolas+kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiJFJlc3RhdXJhbnQgQ2FwdGFpbiBOaWtvbGFzIGtlZmFsb25pYTIGEAAYFhgeMggQABiABBiiBDIFEAAY7wUyBRAAGO8FMggQABiABBiiBEjgaFDBGVijZ3AIeAGQAQCYAdYBoAHsMqoBBjAuMzYuM7gBA8gBAPgBAZgCL6AC_DPCAgoQABiwAxjWBBhHwgIIEAAYgAQYsQPCAgsQLhiABBixAxiDAcICCxAAGIAEGLEDGIMBwgIOEC4YgAQYsQMY0QMYxwHCAggQLhiABBixA8ICDhAuGIAEGLEDGIMBGIoFwgIREC4YgAQYsQMY0QMYgwEYxwHCAgUQABiABMICChAAGIAEGEMYigXCAgsQABiABBiSAxiKBcICDRAAGIAEGEMYyQMYigXCAg0QABiABBixAxhDGIoFwgILEC4YgAQYxwEYrwHCAggQABgWGAoYHsICBxAAGIAEGBPCAggQABgTGBYYHsICChAAGBMYFhgKGB7CAgoQABgIGAoYDRgewgIIEAAYCBgNGB7CAggQABiiBBiJBZgDAIgGAZAGCJIHBjguMzYuM6AHh-wBsgcGMC4zNi4zuAfmM8IHBjAuNDUuMsgHX4AIAA&sclient=gws-wiz-serp",
+  "close_rest_kemeza.jpg": "https://www.google.com/search?q=Remetzo+Restaurant+kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5F1bOTS94QXy85CmqwT41bOH6OOQ%3A1770753603734&ei=Q46LacPGLOuP-d8Pz_GjyAg&ved=0ahUKEwiD9KOc28-SAxXrR_4FHc_4CIkQ4dUDCBE&uact=5&oq=Remetzo+Restaurant+kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiHFJlbWV0em8gUmVzdGF1cmFudCBrZWZhbG9uaWEyBBAAGEcyBBAAGEcyBBAAGEcyBBAAGEcyBBAAGEcyBBAAGEcyBBAAGEcyBBAAGEdI5RNQ5hFY9hJwAHgDkAEAmAEAoAEAqgEAuAEDyAEA-AEBmAICoAIKmAMA4gMFEgExIECIBgGQBgiSBwEyoAcAsgcAuAcAwgcDMi0yyAcIgAgA&sclient=gws-wiz-serp",
+  "close_rest_vatsa.jpg": "https://www.google.com/search?q=Restaurant+vatsa+kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n4bElNfRZRLMVbYK-EuL1GEN6SPng%3A1770753548390&ei=DI6LafjKF8qK-d8Po8SDuAs&ved=0ahUKEwj4gPKB28-SAxVKRf4FHSPiALcQ4dUDCBE&uact=5&oq=Restaurant+vatsa+kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiGlJlc3RhdXJhbnQgdmF0c2Ega2VmYWxvbmlhMgYQABgWGB4yCBAAGKIEGIkFMggQABiABBiiBDIIEAAYogQYiQUyBRAAGO8FSJYaUKkNWOkYcAJ4AZABAJgBrgKgAZgOqgEHMC43LjIuMbgBA8gBAPgBAZgCDKACvQ7CAgoQABiwAxjWBBhHwgINEC4YgAQYxwEYDRivAcICBxAAGIAEGA3CAgYQABgNGB7CAhwQLhiABBjHARgNGK8BGJcFGNwEGN4EGOAE2AEBwgIIEAAYCBgNGB6YAwCIBgGQBgi6BgYIARABGBSSBwcyLjcuMi4xoAeIK7IHBzAuNy4yLjG4B7cOwgcGMC4xMS4xyAcXgAgA&sclient=gws-wiz-serp",
+  "fteri.jpg": "https://www.google.com/search?q=Fteri+Beach+Kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6O7dr8vbXxQhBCslTtMYl6ov5uPQ%3A1770753315766&ei=I42Ladm2LoOgi-gPyIy12As&ved=0ahUKEwiZ1PuS2s-SAxUD0AIHHUhGDbsQ4dUDCBE&uact=5&oq=Fteri+Beach+Kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiFUZ0ZXJpIEJlYWNoIEtlZmFsb25pYTIFEC4YgAQyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yFBAuGIAEGJcFGNwEGN4EGN8E2AEBSIw4UMoHWMg2cAJ4BJABAJgBnAKgAYIdqgEGMC4yMS4yuAEDyAEA-AEBmAIcoAL5HcICBBAAGEfCAgoQLhiABBhDGIoFwgIREC4YgAQYsQMY0QMYgwEYxwHCAgoQABiABBhDGIoFwgILEAAYgAQYsQMYgwHCAggQABiABBixA8ICGRAuGIAEGEMYigUYlwUY3AQY3gQY3wTYAQHCAhAQLhiABBixAxhDGIMBGIoFwgIQEAAYgAQYsQMYQxiDARiKBcICBRAAGIAEwgIfEC4YgAQYsQMYQxiDARiKBRiXBRjcBBjeBBjfBNgBAcICCxAuGIAEGMcBGK8BwgIHEAAYgAQYCsICCxAuGIAEGLEDGIMBwgIaEC4YgAQYsQMYgwEYlwUY3AQY3gQY3wTYAQGYAwDiAwUSATEgQIgGAZAGCLoGBggBEAEYFJIHBjUuMjEuMqAH_MYCsgcGMC4yMS4yuAfmHcIHBjAuNi4yMsgHWYAIAA&sclient=gws-wiz-serp",
+  "kef_assos.jpg": "https://www.google.com/search?q=Asso+Vilage&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n7BCv89bN_BewK6vK51ZDjUoBfk6A%3A1770753224117&ei=yIyLacz2BvOci-gPu86ToAk&ved=0ahUKEwjM-qHn2c-SAxVzzgIHHTvnBJQQ4dUDCBE&uact=5&oq=Asso+Vilage&gs_lp=Egxnd3Mtd2l6LXNlcnAiC0Fzc28gVmlsYWdlMgYQABgNGB4yCBAAGAgYDRgeMggQABgIGA0YHjIIEAAYCBgNGB4yBhAAGA0YHjIGEAAYDRgeMgYQABgNGB4yCBAAGAgYDRgeMggQABgIGA0YHjIIEAAYCBgNGB5IvShQ4QhYiCdwBngBkAEAmAGEAqAB5hWqAQYwLjEyLjO4AQPIAQD4AQGYAhWgAsEWwgIKEAAYsAMY1gQYR8ICExAuGIAEGLADGEMYyAMYigXYAQHCAhkQLhiABBiwAxhDGMcBGMgDGIoFGK8B2AEBwgIKEC4YgAQYQxiKBcICERAuGIAEGLEDGNEDGIMBGMcBwgIOEC4YgAQYsQMY0QMYxwHCAggQABiABBixA8ICCxAAGIAEGLEDGIMBwgIZEC4YgAQYQxiKBRiXBRjcBBjeBBjgBNgBAcICChAAGIAEGEMYigXCAgUQABiABMICCxAuGIAEGMcBGK8BwgIFEC4YgATCAg4QLhiABBixAxiDARiKBcICHRAuGIAEGLEDGNEDGMcBGJcFGNwEGN4EGOAE2AEBwgISEC4YgAQYsQMY0QMYxwEYChgLwgIPEAAYgAQYsQMYgwEYChgLwgIHEC4YgAQYCsICCRAAGIAEGAoYC8ICDxAuGIAEGMcBGAoYCxivAcICEBAuGIAEGLEDGIMBGIoFGArCAiEQLhiABBixAxjRAxjHARgKGAsYlwUY3AQY3gQY4ATYAQHCAgsQLhiABBjRAxjHAcICERAuGIAEGLEDGIMBGMcBGK8BwgIHEAAYgAQYCsICIBAuGIAEGLEDGIMBGMcBGK8BGJcFGNwEGN4EGOAE2AEBwgIGEAAYFhgewgIHEAAYgAQYDcICBxAAGIAEGBPCAgkQABiABBgTGA2YAwCIBgGQBg26BgYIARABGAiSBwU2LjkuNqAHsqwBsgcFMC45Lja4B6UWwgcHMC4xMC4xMcgHQ4AIAA&sclient=gws-wiz-serp",
+  "kef_drogarati.jpg": "https://www.google.com/search?q=Drogarati&sca_esv=3ef4ee282b12278c&sxsrf=ANbL-n6VTTz2SDRQjCYfC2QywhP4feqd2w%3A1770753213719&ei=vYyLab3OK_L9i-gPpPOMoAw&biw=1536&bih=756&ved=0ahUKEwj9oKfi2c-SAxXy_gIHHaQ5A8QQ4dUDCBE&uact=5&oq=Drogarati&gs_lp=Egxnd3Mtd2l6LXNlcnAiCURyb2dhcmF0aTIQEC4YgAQYQxjHARiKBRivATIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgoQABiABBhDGIoFMgUQABiABDIFEAAYgAQyCxAuGIAEGMcBGK8BMh8QLhiABBhDGMcBGIoFGK8BGJcFGNwEGN4EGOAE2AEBSNgTUNEGWP4RcAN4AZABAJgB1gWgAfMQqgELMi0xLjAuMS4wLjK4AQPIAQD4AQGYAgegApIRwgIKEAAYsAMY1gQYR8ICCxAAGIAEGLEDGIMBwgIOEC4YgAQYsQMY0QMYxwHCAhEQLhiABBixAxjRAxiDARjHAcICCBAuGIAEGLEDwgIIEAAYgAQYsQPCAgsQLhiABBixAxiDAZgDAIgGAZAGCLoGBggBEAEYFJIHCzMuMC4xLjAuMS4yoAfkOLIHCTItMS4wLjEuMrgHhxHCBwUwLjMuNMgHGIAIAA&sclient=gws-wiz-serp",
+  "kef_fiskardo.jpg": "https://www.google.com/search?q=Fiskardo+Village&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6Lw-wC5OBmDII6H2A3LHFk8-5Gzg%3A1770753258895&ei=6oyLacGfNuuli-gPo-eE8AI&ved=0ahUKEwjBvOz32c-SAxXr0gIHHaMzAS4Q4dUDCBE&uact=5&oq=Fiskardo+Village&gs_lp=Egxnd3Mtd2l6LXNlcnAiEEZpc2thcmRvIFZpbGxhZ2UyCBAAGBMYBxgeMggQABgTGAcYHjIIEC4YExgHGB4yChAAGBMYBxgIGB4yChAAGBMYCBgNGB4yCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogQyCBAAGIAEGKIEMgUQABjvBUi6FlDtB1itFXAAeAOQAQCYAZcBoAHtCKoBAzAuOLgBA8gBAPgBAZgCB6AC6wXCAgQQABhHwgIGEAAYBxgewgIIEAAYBxgKGB7CAhIQLhiABBixAxjRAxjHARgKGAvCAgwQABiABBixAxgKGAuYAwDiAwUSATEgQIgGAZAGCJIHAzIuNaAHnTqyBwMwLjW4B-MFwgcFMC42LjHIBxGACAA&sclient=gws-wiz-serp",
+  "kef_melissani.jpg": "https://www.google.com/search?q=melisani+kefalonia&oq=melisani+kefalonia&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRiPAjIHCAIQIRiPAtIBCDI5NDFqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8",
+  "lixouri_beach_aia_eleni.jpg": "https://www.google.com/search?q=agia+eleni+beach&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n4sCQ2ioPDcox8mn4iEdkOqK_Scsw%3A1770752971926&ei=y4uLaf-hOIyti-gPtcvS4Qg&ved=0ahUKEwi_s4Hv2M-SAxWM1gIHHbWlNIwQ4dUDCBE&uact=5&oq=agia+eleni+beach&gs_lp=Egxnd3Mtd2l6LXNlcnAiEGFnaWEgZWxlbmkgYmVhY2gyBRAAGIAEMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeSOYcUNoEWIEbcAF4A5ABAJgB9AGgAfcVqgEGMC4xMy40uAEDyAEA-AEBmAIUoALRFsICBBAAGEfCAhEQLhiABBixAxjRAxiDARjHAcICDhAuGIAEGLEDGNEDGMcBwgIKEC4YgAQYQxiKBcICCBAAGIAEGLEDwgILEAAYgAQYsQMYgwHCAiAQLhiABBixAxjRAxiDARjHARiXBRjcBBjeBBjgBNgBAcICCxAuGIAEGLEDGIMBwgIIEC4YgAQYsQPCAgUQLhiABMICBBAAGAPCAhoQLhiABBixAxiDARiXBRjcBBjeBBjgBNgBAcICCxAuGIAEGMcBGK8BwgIHEAAYgAQYCsICFBAuGIAEGJcFGNwEGN4EGN8E2AEBwgIHEC4YgAQYCsICCBAAGBYYChgewgIPEC4YgAQYxwEYChgLGK8BwgIJEC4YgAQYChgLwgIJEAAYgAQYChgLwgIREC4YgAQYxwEYChgqGAsYrwHCAiAQLhiABBjHARgKGCoYCxivARiXBRjcBBjeBBjgBNgBAcICBxAAGIAEGA3CAgYQABgNGB6YAwDiAwUSATEgQIgGAZAGCLoGBggBEAEYFJIHBjMuMTMuNKAHvpUCsgcGMC4xMy40uAfGFsIHBjAuOC4xMsgHQ4AIAA&sclient=gws-wiz-serp",
+  "lixouri_beach_lagadakia.jpg": "https://www.google.com/search?q=lahadakia&sca_esv=3ef4ee282b12278c&sxsrf=ANbL-n6lHIAvRVdFg3_K0zUJzWBpK9KLOg%3A1770752949125&ei=tYuLacGlB8uUxc8Px6uR-A0&biw=1536&bih=756&ved=0ahUKEwiB1JHk2M-SAxVLSvEDHcdVBN8Q4dUDCBE&uact=5&oq=lahadakia&gs_lp=Egxnd3Mtd2l6LXNlcnAiCWxhaGFkYWtpYTILEC4YgAQYChgqGA0yBhAAGA0YHjIGEAAYDRgeMggQABgKGA0YHjIIEAAYChgNGB4yBhAAGA0YHjIGEAAYDRgeMggQABgKGA0YHjIGEAAYDRgeMgYQABgNGB4yGhAuGIAEGAoYKhgNGJcFGNwEGN4EGOAE2AEBSIgbUMAJWL4VcAB4BJABAJgB3QOgAfAOqgEJMC42LjEuMS4xuAEDyAEA-AEBmAIMoAKmD8ICBBAAGEfCAhEQLhiABBixAxjRAxiDARjHAcICChAAGIAEGEMYigXCAggQABiABBixA8ICBRAAGIAEwgILEAAYgAQYsQMYgwHCAg4QLhiABBixAxjRAxjHAcICIBAuGIAEGLEDGNEDGIMBGMcBGJcFGNwEGN4EGOAE2AEBwgIQEC4YgAQYQxjHARiKBRivAcICChAuGIAEGEMYigXCAhYQLhiABBhDGMcBGJgFGJkFGIoFGK8BwgILEC4YgAQYsQMYgwHCAgUQLhiABMICHxAuGIAEGEMYxwEYigUYrwEYlwUY3AQY3gQY4ATYAQHCAgcQABiABBgKwgIJEAAYgAQYChgqwgIHEC4YgAQYCsICBBAAGB7CAhQQLhiABBiXBRjcBBjeBBjgBNgBAcICBxAuGIAEGBPCAgcQABiABBgTwgIJEC4YgAQYExgKwgIJEAAYgAQYExgKwgIWEC4YgAQYExiXBRjcBBjeBBjfBNgBAcICCRAAGIAEGBMYDcICCBAAGBMYDRgewgIKEAAYExgKGA0YHpgDAOIDBRIBMSBAiAYBkAYIugYGCAEQARgUkgcJMy42LjEuMS4xoAfxbrIHCTAuNi4xLjEuMbgHnA_CBwUwLjUuN8gHKYAIAA&sclient=gws-wiz-serp",
+  "lixouri_beach_petani.jpg": "https://www.google.com/search?q=petani+beach&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n7xg2T7hvUk0EdIEUSzo6XbR78EgQ%3A1770752986685&ei=2ouLaYPIKfXai-gP5b2A4AI&ved=0ahUKEwiDnYb22M-SAxV17QIHHeUeACwQ4dUDCBE&uact=5&oq=petani+beach&gs_lp=Egxnd3Mtd2l6LXNlcnAiDHBldGFuaSBiZWFjaDIKEC4YgAQYQxiKBTILEC4YgAQYxwEYrwEyBRAAGIAEMgIQJjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIZEC4YgAQYQxiKBRiXBRjcBBjeBBjgBNgBAUjUF1C2CVjbFXADeAGQAQGYAasBoAG3DaoBBDAuMTK4AQPIAQD4AQGYAg6gAtUMwgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAhMQLhiABBiwAxhDGMgDGIoF2AEBwgIIEAAYgAQYsQPCAg4QLhiABBixAxjRAxjHAcICCxAAGIAEGLEDGIMBwgIQEC4YgAQYQxjHARiKBRivAcICGRAuGIAEGEMYigUYlwUY3AQY3gQY3wTYAQHCAhYQLhiABBhDGMcBGJgFGJkFGIoFGK8BwgIKEAAYgAQYQxiKBcICFhAuGIAEGLEDGNEDGIMBGMcBGIoFGArCAgsQLhiABBixAxiDAcICJRAuGIAEGEMYxwEYmAUYmQUYigUYrwEYlwUY3AQY3gQY4ATYAQHCAg4QABiABBixAxiDARiKBcICFBAuGIAEGLEDGIMBGMcBGIoFGK8BwgILEAAYgAQYsQMYigXCAhEQLhiABBjHARiYBRiaBRivAcICERAuGIAEGMcBGJgFGJkFGK8BwgIFEC4YgATCAiAQLhiABBjHARiYBRiZBRivARiXBRjcBBjeBBjgBNgBAZgDAIgGAZAGE7oGBggBEAEYCJIHBDMuMTGgB-SyAbIHBDAuMTG4B8YMwgcGMC4zLjExyAc0gAgA&sclient=gws-wiz-serp",
+  "lixouri_beach_xi_megas_lakkos.jpg": "https://kefaloniageopark.gr/en/node/554",
+  "lixouri_kipoureon.jpg": "https://www.google.com/search?sca_esv=3ef4ee282b12278c&sxsrf=ANbL-n4XIuINKVK6o_On7dKW6aeVAqGGHw:1770753034869&q=kipoureon+monastery&sa=X&ved=2ahUKEwjIiION2c-SAxXH3gIHHdUUMNsQ7xYoAHoECA8QAQ&biw=1536&bih=756&dpr=1.25",
+  "lixouri_laskaratos.jpg": "https://www.tripadvisor.com.gr/Attraction_Review-g651972-d11445333-Reviews-Statue_of_Andreas_Laskaratos-Lixouri_Kefalonia_Ionian_Islands.html",
+  "lixouri_lighthouse.jpg": "https://www.google.com/search?q=lkefalonia+light+house+gero+gobos&oq=lkefalonia+light+house+gero+gobos&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIJCAEQIRgKGKABMgkIAhAhGAoYoAEyBwgDECEYjwIyBwgEECEYjwLSAQkxMjU4MWowajSoAgCwAgA&sourceid=chrome&ie=UTF-8",
+  "lixouri_pantokrator.jpg": "https://www.google.com/search?q=%CE%B5%CE%BA%CE%BA%CE%BB%CE%B7%CF%83%CE%B9%CE%B1+%CF%80%CE%B1%CE%BD%CF%84%CE%BF%CE%BA%CF%81%CE%B1%CF%84%CE%BF%CF%81%CE%B1+%CE%BB%CE%B7%CE%BE%CE%BF%CF%85%CF%81%CE%B9&sca_esv=3ef4ee282b12278c&sxsrf=ANbL-n7hZ8tgYvnL7bGv1vE1bA0mylg7ZQ:1770753135519&source=lnms&sa=X&ved=2ahUKEwi6p4K92c-SAxV4ygIHHbCtH8QQ0pQJegQIAhAG&biw=1536&bih=756&dpr=1.25",
+  "lixouri_square.jpg": "https://www.google.com/search?q=lixouri+square&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5dsSfkenx7kt4uQX6Z8LjNlQGOAw%3A1770753063426&ei=J4yLaYm7GY_ri-gPneXgwQg&ved=0ahUKEwjJ6tGa2c-SAxWP9QIHHZ0yOIgQ4dUDCBE&uact=5&oq=lixouri+square&gs_lp=Egxnd3Mtd2l6LXNlcnAiDmxpeG91cmkgc3F1YXJlMgQQABgeMgYQABgIGB4yBhAAGAgYHjIGEAAYCBgeMgYQABgIGB4yBhAAGAgYHjIGEAAYCBgeMgYQABgIGB4yCBAAGIAEGKIEMggQABiABBiiBEiAD1D3BliqDHABeAGQAQCYAcABoAHjA6oBAzAuM7gBA8gBAPgBAZgCBKAC7wPCAgoQABiwAxjWBBhHwgIKECEYoAEYwwQYCsICCRAAGIAEGBMYDcICChAAGBMYCBgNGB6YAwDiAwUSATEgQIgGAZAGApIHAzEuM6AH_g-yBwMwLjO4B-wDwgcDMS4zyAcHgAgA&sclient=gws-wiz-serp",
+  "myrtos.jpg": "https://www.google.com/search?q=Myrtos+beach&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n6uz19r-4eWGVJ18I3l3unynnR0xQ%3A1770753270514&ei=9oyLaeqHH8rLi-gP4_mR-Q0&ved=0ahUKEwjq2rH92c-SAxXK5QIHHeN8JN8Q4dUDCBE&uact=5&oq=Myrtos+beach&gs_lp=Egxnd3Mtd2l6LXNlcnAiDE15cnRvcyBiZWFjaDIFEC4YgAQyBRAAGIAEMgsQLhiABBjHARivATICECYyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yFBAuGIAEGJcFGNwEGN4EGOAE2AEBSO8aUK0HWJsZcAN4AZABAJgB0wSgAcsYqgELMC41LjQuMS4xLjG4AQPIAQD4AQGYAg-gAogZwgIKEAAYsAMY1gQYR8ICChAuGIAEGEMYigXCAgsQABiABBixAxiDAcICGRAuGIAEGEMYigUYlwUY3AQY3gQY4ATYAQHCAgoQABiABBhDGIoFwgIIEAAYgAQYsQPCAg4QABiABBixAxiDARiKBcICERAuGIAEGMcBGJgFGJkFGK8BwgIOEC4YgAQYxwEYmAUYrwGYAwCIBgGQBgi6BgYIARABGBSSBwszLjQuNS4xLjEuMaAHl80BsgcLMC40LjUuMS4xLjG4B_4YwgcFMC42LjnIBy6ACAA&sclient=gws-wiz-serp",
+  "rest_comidora.jpg": "https://www.google.com/search?q=Comidoro+restaurant+lixouri&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n4kTCphvDhpFwHm_Th0f050mzBcVg%3A1770753334819&ei=No2LadvcMcqNi-gPm96EwAg&ved=0ahUKEwjbz4ac2s-SAxXKxgIHHRsvAYgQ4dUDCBE&uact=5&oq=Comidoro+restaurant+lixouri&gs_lp=Egxnd3Mtd2l6LXNlcnAiG0NvbWlkb3JvIHJlc3RhdXJhbnQgbGl4b3VyaTIGEAAYFhgeMgUQABjvBTIIEAAYgAQYogQyBRAAGO8FMggQABiABBiiBDIIEAAYgAQYogRIokJQjgtYw0BwBHgBkAEBmAGKAqABhSWqAQYwLjI0LjS4AQPIAQD4AQGYAh-gAt4jwgIKEAAYsAMY1gQYR8ICExAuGIAEGLADGEMYyAMYigXYAQHCAgoQLhiABBhDGIoFwgIKEAAYgAQYQxiKBcICCBAAGIAEGLEDwgILEAAYgAQYsQMYgwHCAhEQLhiABBixAxjRAxiDARjHAcICDhAAGIAEGLEDGIMBGIoFwgIZEC4YgAQYQxiKBRiXBRjcBBjeBBjgBNgBAcICBRAAGIAEwgIOEC4YgAQYsQMY0QMYxwHCAg4QLhiABBjHARiOBRivAcICCxAuGIAEGMcBGK8BwgIHEAAYgAQYCsICHRAuGIAEGMcBGI4FGK8BGJcFGNwEGN4EGOAE2AEBwgINEC4YgAQY0QMYxwEYCsICBhAAGAoYHsICBBAAGB7CAggQABgWGAoYHsICAhAmwgIHECEYoAEYCsICCBAAGKIEGIkFmAMAiAYBkAYQugYGCAEQARgIkgcGNC4yNC4zoAeqmgGyBwYwLjI0LjO4B80jwgcGMC4yNS42yAdFgAgA&sclient=gws-wiz-serp",
+  "rest_gefyra.jpg": "https://www.google.com/search?q=Gefyra+restaurant+lixouri&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n7008QBPEM7YQ9rh3xyh329e3dOAg%3A1770753359167&ei=T42LaZT1Cbi-i-gPqbzkyQ4&ved=0ahUKEwjU2NSn2s-SAxU43wIHHSkeOekQ4dUDCBE&uact=5&oq=Gefyra+restaurant+lixouri&gs_lp=Egxnd3Mtd2l6LXNlcnAiGUdlZnlyYSByZXN0YXVyYW50IGxpeG91cmkyBRAhGKABSLA6UPAIWMA4cAN4AZABAJgB-wGgAfsgqgEGMC4yMy4yuAEDyAEA-AEBmAIcoALWIcICChAAGLADGNYEGEfCAgsQABiABBixAxiDAcICERAuGIAEGLEDGNEDGIMBGMcBwgILEC4YgAQYsQMYgwHCAggQABiABBixA8ICEBAAGIAEGLEDGIMBGIoFGArCAgsQLhiABBjRAxjHAcICBRAAGIAEwgIREC4YgAQYxwEYmAUYmQUYrwHCAgcQABiABBgKwgILEC4YgAQYxwEYrwHCAgkQABiABBgKGAvCAgYQABgWGB7CAgcQABiABBgNwgIGEAAYDRgewgIIEAAYFhgKGB7CAgcQIRigARgKwgIFECEYnwWYAwCIBgGQBgiSBwYzLjIzLjKgB5-jAbIHBjAuMjMuMrgHzSHCBwYzLjIzLjLIBzyACAA&sclient=gws-wiz-serp",
+  "rest_mparaka.jpg": "https://www.google.com/search?q=MOaraka+lixouri+&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5pGDs-sYtuSBfwMcFC6yUT5QQcNg%3A1770753374992&ei=Xo2LabmZPNqQi-gPtKrN8Qo&ved=0ahUKEwi5wJqv2s-SAxVayAIHHTRVM64Q4dUDCBE&uact=5&oq=MOaraka+lixouri+&gs_lp=Egxnd3Mtd2l6LXNlcnAiEE1PYXJha2EgbGl4b3VyaSAyBhAAGA0YHjIIEAAYgAQYogQyCBAAGKIEGIkFMggQABiiBBiJBTIIEAAYgAQYogQyCBAAGIAEGKIESOAqUL8HWI8pcAN4AZABAZgBmAKgAYoXqgEGMC4xMy4zuAEDyAEA-AEBmAISoAK4FcICChAAGLADGNYEGEfCAgoQABiABBhDGIoFwgILEAAYgAQYsQMYgwHCAgsQLhiABBjRAxjHAcICCBAAGIAEGLEDwgIREC4YgAQYsQMY0QMYgwEYxwHCAgUQABiABMICIBAuGIAEGLEDGNEDGIMBGMcBGJcFGNwEGN4EGOAE2AEBwgIIEC4YgAQYsQPCAgsQLhiABBixAxiDAcICBRAuGIAEwgIXEC4YgAQYsQMYlwUY3AQY3gQY4ATYAQHCAg4QLhiABBjHARiYBRivAcICBxAuGIAEGArCAgcQABiABBgKwgIKEC4YgAQYQxiKBcICDxAuGIAEGMcBGAoYCxivAcICCRAAGIAEGAoYC8ICEhAuGIAEGMcBGAoYCxiOBRivAcICHhAuGIAEGMcBGAoYCxivARiXBRjcBBjeBBjgBNgBAcICDRAuGIAEGLEDGIMBGA3CAgcQABiABBgNwgINEC4YgAQYxwEYDRivAcICEBAuGIAEGMcBGA0YjgUYrwHCAgcQLhiABBgNwgIcEC4YgAQYsQMYgwEYDRiXBRjcBBjeBBjgBNgBAcICHxAuGIAEGMcBGA0YjgUYrwEYlwUY3AQY3gQY4ATYAQHCAgUQABjvBcICCRAhGKABGAoYKsICBxAhGKABGAqYAwCIBgGQBgi6BgYIARABGBSSBwYzLjEyLjOgB_mlAbIHBjAuMTIuM7gHrRXCBwYwLjExLjfIBzCACAA&sclient=gws-wiz-serp",
+  "rest_tsilikos.jpg": "https://www.google.com/search?q=Tsilikos+lixouri&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n57pBoXg48sVLYsyqrbZFSNVc1Rdw%3A1770753388678&ei=bI2LacaIKYnui-gPrceOMQ&ved=0ahUKEwjG7t212s-SAxUJ9wIHHa2jIwYQ4dUDCBE&uact=5&oq=Tsilikos+lixouri&gs_lp=Egxnd3Mtd2l6LXNlcnAiEFRzaWxpa29zIGxpeG91cmkyCBAAGIAEGKIEMggQABiABBiiBDIIEAAYgAQYogQyCBAAGIAEGKIEMgUQABjvBUjyEFC3BliVEHACeAGQAQCYAZgBoAGDCKoBAzAuN7gBA8gBAPgBAZgCBqAC2ATCAgoQABiwAxjWBBhHwgIGEAAYBxgemAMAiAYBkAYHkgcDMi40oAeVIbIHAzAuNLgH0wTCBwMwLjbIBwuACAA&sclient=gws-wiz-serp",
+  "skala.jpg": "https://www.google.com/search?q=Skala+Kefalonia&sca_esv=3ef4ee282b12278c&biw=1536&bih=756&sxsrf=ANbL-n5SjUMOOcx-oEqp0MMri2k6qirR1Q%3A1770753293441&ei=DY2LafTZGo2ni-gPjuPPmAU&ved=0ahUKEwi0lKmI2s-SAxWN0wIHHY7xE1MQ4dUDCBE&uact=5&oq=Skala+Kefalonia&gs_lp=Egxnd3Mtd2l6LXNlcnAiD1NrYWxhIEtlZmFsb25pYTIFEC4YgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDICECYyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yFBAuGIAEGJcFGNwEGN4EGOAE2AEBSKAVUOUCWPITcAB4ApABApgBmASgAf8cqgELMC41LjUuMy4wLjG4AQPIAQD4AQGYAgqgAtMPwgIEEAAYR8ICERAuGIAEGMcBGJgFGJkFGK8BwgILEC4YgAQYxwEYrwHCAiAQLhiABBjHARiYBRiZBRivARiXBRjcBBjeBBjgBNgBAcICCRAAGIAEGAoYC5gDAIgGAZAGCLoGBggBEAEYFJIHBzEuNC40LjGgB-acAbIHBzAuNC40LjG4B88PwgcFMC4xLjnIBySACAA&sclient=gws-wiz-serp"
+};
+
+
+/* Make any image whose filename exists in PHOTO_LINKS clickable */
+function __basenameFromSrc(src){
+  try {
+    const clean = String(src || "").split("#")[0].split("?")[0];
+    return clean.substring(clean.lastIndexOf("/") + 1);
+  } catch(e) { return ""; }
+}
+
+function __getCurrentState(){
+  const activeScreen = Object.entries(screens).find(([k,el]) => el.classList.contains("active"))?.[0] || "splash";
+  const state = {
+    screen: activeScreen,
+    pageKey: (activeScreen === "page" ? (window.currentPageKey || null) : null),
+    localTab: null,
+    cardScrollTop: null
+  };
+  if(activeScreen === "page") {
+    const activeTab = pageCard?.querySelector?.(".tabPill.active");
+    if(activeTab) state.localTab = activeTab.dataset.localTab || null;
+    if(pageCard) state.cardScrollTop = pageCard.scrollTop || 0;
+  }
+  return state;
+}
+
+function __persistState(state){
+  try { localStorage.setItem("G Boutique Hotel Kefalonia_state_v1", JSON.stringify(state)); } catch(e) {
+    try { sessionStorage.setItem("G Boutique Hotel Kefalonia_state_v1", JSON.stringify(state)); } catch(e2) {}
+  }
+}
+
+function __restoreState(){
+  // Restore last screen safely. If the saved state is invalid/corrupted, ignore it.
+  const validate = (state) => {
+    if(!state || typeof state !== "object") return null;
+    const allowed = new Set(["splash","welcome","menu","page"]);
+    if(!allowed.has(state.screen)) return null;
+    if(state.screen === "page"){
+      if(!state.pageKey || !PAGES || !PAGES[state.pageKey]) return null;
+    }
+    return state;
+  };
+
+  try {
+    const raw = localStorage.getItem("G Boutique Hotel Kefalonia_state_v1");
+    if(raw) return validate(JSON.parse(raw));
+  } catch(e) {}
+  try {
+    const raw2 = sessionStorage.getItem("G Boutique Hotel Kefalonia_state_v1");
+    return raw2 ? validate(JSON.parse(raw2)) : null;
+  } catch(e2) { return null; }
+}
+
+function __applyState(state){
+  if(!state || !state.screen) return;
+  if(state.screen === "page" && state.pageKey) {
+    // render correct page then show it
+    renderPage(state.pageKey);
+    show("page");
+    // restore local tab if exists
+    if(state.localTab) {
+      const btn = pageTopTitle?.querySelector?.(`[data-local-tab="${state.localTab}"]`);
+      if(btn) btn.click();
+    }
+    // restore scroll
+    if(typeof state.cardScrollTop === "number") {
+      requestAnimationFrame(() => { if(pageCard) pageCard.scrollTop = state.cardScrollTop; });
+    }
+  } else {
+    show(state.screen);
+  }
+}
+
+function __attachPhotoLinks(root){
+  if(!root) return;
+  const imgs = root.querySelectorAll("img");
+  imgs.forEach(img => {
+    const fname = __basenameFromSrc(img.getAttribute("src") || img.src || "");
+    const href = PHOTO_LINKS[fname];
+    if(!href) return;
+
+    if(img.dataset.linked === "1") return;
+    img.dataset.linked = "1";
+    img.classList.add("clickablePhoto");
+    img.setAttribute("role","link");
+    img.setAttribute("tabindex","0");
+    img.setAttribute("aria-label", (img.getAttribute("alt") || fname) + " (open link)");
+
+    const go = (ev) => {
+      try { ev?.stopPropagation?.(); ev?.preventDefault?.(); } catch(e) {}
+      __persistState(__getCurrentState());
+      // open in same tab so user can press browser back; state is restored from sessionStorage
+      window.location.href = href;
+    };
+    img.addEventListener("click", go);
+    img.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " ") go(e);
+    });
+  });
+}
+
+/* Patch renderPage to attach links after every render */
+const __orig_renderPage = renderPage;
+renderPage = function(key){
+  __orig_renderPage(key);
+  // attach links after DOM updates
+  requestAnimationFrame(() => __attachPhotoLinks(pageCard));
+};
+
+/* Patch show() to keep browser history + persist state */
+const __orig_show = show;
+let __suppressHistory = false;
+
+show = function(screenId){
+  __orig_show(screenId);
+
+  if(__suppressHistory) return;
+  const state = __getCurrentState();
+  __persistState(state);
+
+  // push/replace history state so browser back works inside the app too
+  const urlHash = (state.screen === "page" && state.pageKey) ? ("#/" + encodeURIComponent(state.pageKey)) : ("#/" + encodeURIComponent(state.screen));
+  try {
+    // avoid pushing duplicates
+    const cur = history.state;
+    const same = cur && JSON.stringify(cur) === JSON.stringify(state);
+    if(!same) history.pushState(state, "", urlHash);
+  } catch(e) {}
+};
+
+/* Ensure initial history state + restore last view (after coming back from external site) */
+(function __historyInit(){
+  const restored = __restoreState();
+  if(restored) {
+    // don't double-push when applying restored state
+    __suppressHistory = true;
+    __applyState(restored);
+    __suppressHistory = false;
+    try { history.replaceState(__getCurrentState(), "", location.hash || "#/"); } catch(e) {}
+  } else {
+    try { history.replaceState({screen:"welcome"}, "", "#/welcome"); } catch(e) {}
+  }
+
+  // react to browser back/forward
+  window.addEventListener("popstate", (e) => {
+    const state = e.state || __restoreState();
+    __suppressHistory = true;
+    if(state) __applyState(state);
+    else show("welcome");
+    __suppressHistory = false;
+  });
+
+
+  // On iOS/Safari, sessionStorage can be cleared when navigating to another site.
+  // pageshow fires when returning via Back (including bfcache). Re-apply the last saved state.
+  let __didPageShowRestore = false;
+  window.addEventListener("pageshow", () => {
+    if(__didPageShowRestore) return;
+    const st = __restoreState();
+    if(st){
+      __suppressHistory = true;
+      __applyState(st);
+      __suppressHistory = false;
+      __didPageShowRestore = true;
+    }
+  });
+
+  // Save state when page is being hidden (navigation away / app background)
+  document.addEventListener("visibilitychange", () => {
+    if(document.hidden){
+      __persistState(__getCurrentState());
+    }
+  });
+
+  // also attach links on first render (splash/home)
+  requestAnimationFrame(() => __attachPhotoLinks(document));
+})();
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  if(!location.hash || location.hash === "#/" || location.hash === "#"){
+    location.hash = "#/welcome";
+  }
+});
+
+</script>
+</body>
+</html>
